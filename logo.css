@@ -1,0 +1,18 @@
+.reveal .slide-logo {
+  display: block;
+  position: fixed;
+  bottom: unset !important;
+  right: 12px;
+  top: 1px;
+  left: unset !important;
+  height: 50px !important;
+  width: 50x !important;
+  max-width: unset !important;
+  max-height: unset !important;
+  color: gray;
+}
+
+.reveal .slides {
+  margin-top: 0.3em;
+  margin-bottom: 0.5em;
+}

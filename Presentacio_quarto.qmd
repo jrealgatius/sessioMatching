@@ -1,0 +1,1610 @@
+---
+title: "Métodos de emparejamiento (Matching)"
+subtitle: "En grandes bases de datos"
+author: "Jordi Real <br> jreal@idiapjgol.info"
+institute: "IDIAP- Jordi Gol <br> USR-BCN. Grup DAP-Cat"
+slide-number: true
+smaller: true
+format:
+  revealjs:
+    logo: "logos/Logo_dapcat_idiap.png"
+    footer: "Métodos de Matching en estudios retrospectivos"
+    theme: simple # solarized # simple
+    chalkboard: false
+    css: logo.css
+---
+
+```{r setup}
+
+library(MatchIt)
+library(compareGroups)
+library(dplyr)
+library(rlang)
+library(ggplot2)
+source("global_funcions.R")
+
+
+```
+
+## Métodos de Matching
+
+**Jordi Real - 2022**
+
+![](figures/Tesis_caratula.png){width="100%" height="100%" fig-align="center"}
+
+
+::: {.notes}
+
+Desde que me dedico a esto de la estadística siempre me ha gustado lo que es el diseño, y de hecho en la carrera  entre las asignaturas  relativas a diseño, como técnicas de muestreo, diseño de experimentos i epidemiologia. Fueron las que tuve más interes
+
+Cuándo trabajé en el  hospital como hacia un poco todo consultor i assesor i analisis, también ayudava a optimizar diseños en el laboratorio
+
+Después me incorporé en el IDIAP, i ya en Lleida me se hacian estudios con grandes bases de datos, vinculando Datos de la historia clínica, hospital, i farmacia. 
+
+I cuando me decidí por la tesis, tenia muy claro que queria hacer algo relacionado con este tema
+
+Intentaré explicar / compartir un poco de introducción de estos métodos
+
+He de decir que siempre me considero un estadístico aplicado, poco teorico, i tengo un cierta Deformación professional. 
+
+Esto tiene una parte buena i una mala . 
+
+- No pongo demasiadas formulas, 
+- No soy 100% Formal a nivel Matematico. 
+
+Espero explicarme y que algunos conceptos queden medianamente claros y tener tiempo 
+
+
+:::
+
+
+## Guión
+
+
+**¿Por qué? ¿Como? ¿Cuándo?**
+
+::: {.fragment}
+
+-   Introducción
+
+    -   Confusión
+    -   Métodos de ajuste
+    -   Comparativa
+
+-   Métodos de matching
+
+    -   Proceso
+    -   Distancias, algoritmos y Validación
+    -   Herramientas y grados de libertad
+ 
+-   Conclusiones / Resumen
+    
+    - Cuándo aplicarlo
+    - Resumen
+
+:::
+
+
+
+## Introducción
+
+::: incremental
+**Aspecto más importante de una investigación?**
+:::
+
+::: fragment
+
+![](figures/diana1.jpg){width="40%" height="40%" fig-align="center"}
+
+:::
+
+::: notes
+
+Cual es?
+
+- El pressupuesto  o viabilidad?
+- El Estadístico
+
+:::
+
+```{r, echo=FALSE, fig.align='center',fig.pos="H", size=150}
+
+# ![](figures/diana1.jpg){fig.align="center"}
+
+# knitr::include_graphics("figures/diana1.jpg")
+
+# ?include_graphics
+
+
+
+```
+
+## Introducción
+
+Estudio CVD-Real
+
+
+![](figures/CVDReal_global.png){width="50%" height="50%" fig-align="centre"}
+
+::: {.notes}
+
+Objetivo real fué:
+
+- Evaluar si un tipo de antidiabetico, mas nuevo llamado ISGLT2 que actua sobre la disponibilidad de la glucosqa i favorecen su eliminación renal (Farmacos más nuevos)  tienen cierto efecto protector sobre el riesgo CV, en comparación con otro tipo, como el GLP1 , más antiguos , que actuan sobre la insulina. 
+
+- Este estudio fué una colaboración internacional donde cada pais hacia su propio analisis y después se enviava a global i ellos hacian un metaanalisis
+
+- Cohorte retrospectiva donde se comparaban eventos CV de dos grupos que iniciavan distintos antidiabeticos
+
+- De la N global,  SIDIAP, con nuestro analisis aportamos unos 12000 episodios
+
+- I después publicamos nuestros datos
+
+:::
+
+## Introducción
+
+Estudio CVD-Real Catalonia
+
+
+![](figures/CVDReal_Catalonia.png){width="60%" height="50%" fig-align="centre"}
+
+::: {.notes}
+
+- Otro ejemplo fué 
+
+:::
+
+
+```{r}
+
+# knitr::include_graphics("figures/grafo1.png")
+
+# knitr::include_graphics("figures/CVDReal_Catalonia.png")
+
+
+```
+
+## Introducción
+
+Estudio Cuidadores
+
+![](figures/Article_cuidador.png){width="75%" height="75%" fig-align="centre"}
+
+
+
+```{r, echo=FALSE, fig.align='center',fig.pos="H"}
+
+# knitr::include_graphics("figures/grafo1.png")
+
+# knitr::include_graphics("figures/Article_cuidador.png")
+
+# <p style="font-size:12pt">Habitual en estudios observacionales</p>
+
+
+```
+
+
+::: {.notes}
+
+-  Este estudio si que lo incluí en la tesis como resultado cuando estuve a la universidad 
+
+- Cual era el objetivo real? 
+
+- Objetivo real: Evaluar el impacto sobre la salud mental (Ansiedad, depresión etc..) con estar en una situación de cuidador informal
+
+- Este estudio entraremos más en el detalle
+
+:::
+
+
+
+## Ejemplo 
+
+::: columns
+::: {.column width="60%"}
+**Estudio Cuidadores**
+:::
+
+::: {.column width="40%"}
+```{r}
+knitr::include_graphics("figures/Relacion_XY.png")
+```
+:::
+:::
+
+::: incremental
+-   Método:
+
+    -   ENSE: Encuesta nacional de salud española. 20.000 hogares
+    -   Se identificó **515** personas en situación de cuidador informal (superior al año)
+    -   Resultados en Salud: Diagnostico depresión, Ansiedad, Calidad de vida, Estado de salud percibido, soporte social
+:::
+
+
+::: {.notes}
+
+-  Por lo tanto. Ambos estudios son estudios donde el interes es evaluar una associación X --> Y
+
+- El de los antidiabeticos. Evaluar la relación de un antidiabetico con eventos CV 
+- I el de los cuidadores medir y evaluar una situación de cuidador con unos resultados en salud
+
+- Aquí entraremos más en el detalle
+
+:::
+
+
+
+## Ejemplo
+
+::: columns
+::: {.column width="60%"}
+**Enfoque analítico básico**
+:::
+
+::: {.column width="40%"}
+```{r}
+knitr::include_graphics("figures/Relacion_XY.png")
+```
+:::
+:::
+
+::: incremental
+-   P(Depresion / Cuidador) = 16% (n=515)
+-   P(Depresión / Resto) = 8.4% (n=19.500)
+-   Medida de asociación : OR = 2.03 (CI95: 1.7 - 2.5)
+:::
+
+::: {.notes}
+
+- Un primer analisis más intuitivo seria el siguiente
+
+- Calcular / estimar, el % de Depresión en los Cuidadores (Aprox 515)
+- I en el Resto de personas (19500)
+
+- Esto represeta que los cuidadores casi doblan en % de depresión respecto el resto
+- La medida de asociación "estrella" / mas conocida seria el OR, el cual en este caso seria de 2.03.  
+
+:::
+
+
+## Introducción
+
+::: incremental
+
+Preguntas
+
+- Puedo comparar resultados en salud de los 515 cuidadores con el resto 19.514 no cuidadores?
+- Son comparables?
+- Veamos la diferencia en edad entre los cuidadores versus los no-cuidadores
+- Los cuidadores 7.3 años mayores que los no cuidadores
+:::
+
+::: fragment
+::: {#fig-elephants layout-ncol="2"}
+![Boxplot](figures/box_plot.png){#fig-boxplot}
+
+![Grafo](figures/grafo1.png){#fig-grafo}
+
+DAG
+:::
+:::
+
+
+::: {.notes}
+
+
+- El odds Ratio de 2 que hemos visto antes podria estar afectado , totalmete o en parte, por el hecho de que los cuidadores són como mínimo 7 años mayores. Por lo tanto no sabemos que parte es debida viene por la edad o que parte biene por el hecho de ser cuidador. 
+
+- Esto es lo que conocemos como factor de confusión. Concepto ampliamente conocido en estadística i epidemiologia
+
+
+
+:::
+
+
+## Sesgo de confusión
+
+::: columns
+::: {.column width="60%"}
+**Sesgo de confusión**
+:::
+
+::: {.column width="40%"}
+```{r, echo=FALSE, out.width = "150px", out.height="100px",fig.align='center',fig.pos="H"}
+knitr::include_graphics("figures/grafo1.png")
+```
+:::
+:::
+
+-   Habitual en estudios observacionales
+
+-   Confusión: "mezcla" o "difuminación" de efectos
+
+-   Se trata de relacionar una exposición a un resultado
+
+-   En realidad mide el efecto de un tercer factor (la variable de confusión)
+
+-   Distorsiona la medida de la asociación entre otras dos variables
+
+-   El resultado en presencia de una variable de confusión puede ser la observación de:
+
+    1.  Efecto donde en realidad no existe (Asociación espuria)
+    2.  Exageración o atenuació d'una asociación real (confusión positiva)
+    3.  Inversión del sentido de una asociación real (confusión negativa)
+
+## Métodos de ajuste
+
+::: incremental
+-   Restricción (Diseño)
+
+-   Anticipación de confusores potenciales (Diseño)
+
+-   Estratificación por confusor/es (Análisis):
+
+    -   [Simple]{style="color: green"}
+
+    -   [Difícil con muchas covariables]{style="color: red"}
+    
+-   Técnicas de estandarización (Análisis)
+
+-   Métodos de regresión (Ajuste por covarianza) (Análisis)
+
+    -   [Mayor potencia estadística]{style="color: green"}
+
+    -   [Técnico]{style="color: red"}
+
+    -   [Asunciones de modelos]{style="color: red"}
+
+:::
+
+
+::: {.notes}
+
+- Como arreglamos esto? 
+
+- Tambien existen tecnicas muy conocidas, algunas de ellas serian: 
+
+
+:::
+
+
+## Modelos de regressión
+
+**Asunciones sobre modelos**
+
+```{r, echo=FALSE, fig.align='center'}
+
+knitr::include_graphics("figures/Perfect_model.jpg")
+
+```
+
+
+::: {.notes}
+
+- Cuales son las asumciones sobre los modelos? 
+
+- Aquí tenemos este MEME que representa el modelo perfecto però hay que tener cuidado por culpa de: 
+
+- Multicolinealidad , heterocestadicidad, autocorrelación residual, etc..
+
+:::
+
+
+## Modelos de regressión
+
+**Asunciones sobre modelos de regressión**
+
+```{r, echo=FALSE, fig.align='center'}
+
+knitr::include_graphics("figures/Risk_regression_model.jpg")
+
+```
+
+::: {.notes}
+
+- Además de los outliers i la Nonlinealidad 
+
+- todo esto es como una Amenaza que aveces puede poner en duda las inferencias realizadas a través de los modelos
+
+- Este tema parece que a veces no se le da importancia que tiene, pero si que ultimamente me encuentro com mas revisiones
+
+- Si se 
+
+:::
+
+
+
+## Modelos de regressión
+
+**Asunciones sobre modelos de regression**
+
+::: columns
+
+::: {.column width="50%"}
+![](figures/Hienes_menjen_carn.jpg){width="100%" height="100%"}
+:::
+
+::: {.column width="50%"}
+
+
+:::
+
+:::
+
+
+::: notes
+
+Que es esto?
+
+Potencial carnaza para revisores,  aunque no tendria que ser la principal preocupación
+
+Más adelante veremos possibles consecuencias
+
+:::
+
+
+## Modelos de regressión
+
+**Asunciones sobre modelos de regression**
+
+::: columns
+
+::: {.column width="50%"}
+![](figures/Hienes_menjen_carn.jpg){width="100%" height="100%"}
+:::
+
+::: {.column width="50%"}
+
+
+::: {style="font-size: 0.6em; text-align: left"}
+**Reviewer #2: (27/09/2023)**
+The paper is beautifully written and considers an important topic. Since this is a modelling study, including additional details on the models is necessary. My detailed comments follow.
+
+1. For the univariate and multivariate (presumably multivariable) analyses mentioned on page 5, line 14 (or 28 with the journal's numbering), please specify what kind of models were used, e.g. Poisson, Cox etc.
+2. Please briefly describe what model **assumption and goodness of fit** checks were performed, and what the findings were (you could include details in supplementary material).
+3. There are many variables included in the multivariable analyses - how were these selected, and what checks for **collinearity** were performed?
+:::
+
+:::
+
+:::
+
+::: notes
+
+Algunas revisiones:
+
+Estos aspectos aveces ignorados es possible carnaza de revisores aunque no tendria que ser la principal preocupación de un investigador
+
+Más adelante veremos possibles consecuencias de ignorar estos aspectos
+
+:::
+
+
+## Ajuste por regressión
+
+Estudio cuidadores. **Enfoque multivariable**
+
+Ajuste multivariable mediante regressión logística
+
+-   Tener en cuenta la edad y otros factores asociados[^2]
+
+::: incremental
+-   Medida de asociación **no ajustada**: OR= 2.03 (IC95%: 1.7 - 2.5)
+-   Medida de asociación **ajustada**: OR= 1.56 (IC95%: 1.21 - 2.04)
+
+
+:::
+
+::: fragment
+::: {layout-ncol="2"}
+
+![OR: 2.03; IC95%=(1,71-2,5)](figures/Relacion_XY.png){fig-align="left"}
+
+![OR: 1.56; IC95%=(1.21-2.04)](figures/grafo3.png){fig-align="left"}
+:::
+
+:::
+
+[^2]: Ajustado por: Edad, sexo, Población, Composición familiar, Nivel educativo, Ingresos familiarias, clase social
+
+<!-- ::: aside -->
+<!-- Ajustado por: Edad, sexo, Población, Composición familiar, Nivel educativo, Ingresos familiarias, clase social,,,,, -->
+<!-- ::: -->
+
+
+## Métodos de ajuste
+
+::: {.fragment .semi-fade-out}
+-   Restricción (Diseño)
+
+-   Anticipación de confusores potenciales (Diseño)
+
+-   Estratificación por confusor/es (Análisis):
+
+    -   [Simple]{style="color: green"}
+
+    -   [Difícil con muchas covariables]{style="color: red"}
+    
+-   Técnicas de estandarización (Análisis)
+    
+-   Métodos de regresión (Ajuste por covarianza) (Análisis)
+
+    -   [Mayor potencia estadística]{style="color: green"}
+
+    -   [Técnico]{style="color: red"}
+
+    -   [Asunciones de modelos]{style="color: red"}
+:::
+
+-   Matching (Diseño / Análisis)
+
+## Matching
+
+**En que consiste?**
+
+Dada N, encontrar n (n<N), tal que los grupos sean de igual o de similares características
+
+![](figures/Scatter_plot1.png)
+
+
+## Matching
+
+**En que consiste?**
+
+Dada N, encontrar n (n<N), tal que los grupos sean de igual o de similares características
+
+![](figures/Scatter_plot2.png)
+
+
+
+## Estudio cuidadores
+
+**Comparativa entre métodos**
+
+-   Medida de asociación **no ajustada**: OR= 2,03 (IC95%: 1,7 - 2,5)
+-   Medida de asociación **ajustada según regressión**: OR= 1,56 (IC95%: 1,21 - 2,04)
+-   Medida de asociación **según método de matching**: OR = 1,34 (IC95%: 1,02 - 1,76)
+
+::: fragment
+::: {layout-ncol="2"}
+
+![OR: 1.34; IC95%=(1,02-1,76)](figures/grafo2.png){fig-align="left"}
+
+![OR: 1.56; IC95%=(1.21-2.04)](figures/grafo3.png){fig-align="left"}
+
+:::
+
+:::
+
+[^2]: Ajustado por: Edad, sexo, Población, Composición familiar, Nivel educativo, Ingresos familiarias, clase social
+
+
+
+## ¿Por que?
+
+**La prueba del algodón. Estudio de simulación**
+
+
+
+::: incremental
+-   Objetivo: Comparar la corrección del **sesgo de confusión** entre distintas aproximaciones mediante un estudio de simulación
+
+-   En una situación controlada donde conocemos la realidad
+
+-   Generamos 7500 muestras simuladas de tamaño grande (n=10.000) tal que:
+:::
+
+::: fragment
+![](figures/grafo_simulacio.png){align="center"}
+:::
+
+::: {.notes}
+
+Por que se prefiere este tipo de aproximación? en algunos casos. 
+
+Por ejemplo el estudio CVD Real Global, con un promotor importante elijió este tipo de aproximación? 
+
+Voy a presentar algunos resultados de un estudio de mi tesis 
+
+-   Planteamos distintos escenarios y generamos muestras simuladas segun los siguientes escenarios:
+
+-   Una Exposición X dicotomica independiente de Y (Outcome binario) (OR=1, Efecto nulo)
+
+-   Por ejemplo: Hipotesis Fans Messi, les gusta el futbol, fans Almodovar / Chocolate / Canas --> Depresión?
+
+-   Una Variable confusora Z, continua, generada según \~ N(mu, sd); Z \~ X según cierto nivel de asociación (r=0.5 y 0.3)
+
+
+:::
+
+
+
+## Estudio de simulación 
+
+-   Distintos escenarios donde la Relación confusor Z vs P(Y):
+
+<img src="figures/GrafoZY.png" alt="drawing" style="float: right;"/>
+
+
+![](figures/simulaciones_Z_Y.png){align="center" width="55%" height="55%"}
+
+
+
+::: {.notes}
+
+Por qué en comparación sobre otras técnicas? 
+
+:::
+
+
+## Estudio de simulación 
+
+Estudio de simulación
+
+<img src="figures/grafo1.png" alt="drawing" style="float: right;"/>
+
+Distintas aproximaciones para estimar el efecto de X sobre Y
+
+```{r, fig.cap="Estimar el efecto de X sobre Y", eval=FALSE}
+
+# knitr::include_graphics("figures/grafo1.png")
+
+```
+
+| *Descripción*                               | Método          |
+|---------------------------------------------|-----------------|
+| 1\. Z Lineal (LogLineal)                    | Regresión       |
+| 2\. Categorizando Z En quintiles (LogitCat) | Regresión       |
+| 3\. Fuciones polinómicas Z\^3 (LogNoLineal) | Regresión       |
+| 4\. Función no paramétrica s(Z) (GAM)       | Regresión       |
+| 5\. Exacto                                  | Matching exacto |
+| 6\. Subclasificación con descartes          | Matching        |
+| 7\. Nearest- Neighbour                      | Matching N-N    |
+
+------------------------------------------------------------------------
+
+## Estudio de simulación 
+
+*Resultados escenario* **Lineal**
+
+Estimación de efecto nulo (OR=1) según el método de ajuste
+
+```{r}
+ 
+knitr::include_graphics("figures/Estimaciones_Esc_Lineal.png")
+
+```
+
+## Estudio de simulación 
+
+*Resultados escenario* **No Lineal**
+
+Estimación de efecto nulo (OR=1) según el método de ajuste
+
+```{r}
+ 
+knitr::include_graphics("figures/Estimaciones_Esc_NoLineal.png")
+
+```
+
+## Estudio de simulación 
+
+*Resultados escenario* **No lineal**
+
+Estimación de efecto nulo (OR=1) según el método de ajuste
+
+```{r}
+ 
+knitr::include_graphics("figures/Estimaciones_Esc_NoLineal2.png")
+
+```
+
+
+::: {.notes}
+
+Que passa en terminos de error de tipo I. Recordemos que estamos SABEMOS QUE NO HAY RELACIÓN ENTRE X - Y
+Por ejemplo les gusta ls pelis de almodobar o el chocolate y la depressión. 
+
+:::
+
+## Estudio de simulación 
+
+**Error de tipo I empirico según escenario y método**
+
+```{r}
+ 
+knitr::include_graphics("figures/error_tipo1.png")
+
+```
+
+## Estudio de simulación 
+
+**Tasa de falsos positivos según escenario y método**
+
+```{r}
+ 
+knitr::include_graphics("figures/taula_taxa_error.png")
+
+```
+
+## ¿Por qué fallan algunos modelos?
+
+
+::: {.r-stack}
+
+![](figures/Expectativa.png){.fragment width="120%" height="120%"}
+
+![](figures/Expectativa_Realidad.png){.fragment width="120%" height="120%"}
+
+![](figures/QualityReporting.jpg){.fragment width="100%" height="50%"}
+
+:::
+
+::: {.notes}
+
+Por qué No han hecho su mágia? 
+
+Basicamente por que los datos no reflejan lo que el modelo dice 
+
+Fallan sobre todo cuando el modelo està mal especificado. Como passaria con el ejemplo ilustrativo de la piscina.
+
+I lo grave es que muchas veces nos creemos lo que dice el modelo sin verificarlo. 
+
+Es como si no abrieramos nunca la caja de la piscina, i nos quedampos con lo que dice el anuncio como válido. 
+
+Lo que se tendria que hacer es una denuncia i que hagan un modelo más acorde con la realidad. O mejorar los datos
+
+
+
+:::
+
+## Tipos de matching
+
+> -   Matching aproximado por frequencia (según una distancia)
+> -   Matching exacto por frequencia
+> -   Matching individual por densidad de incidencia
+
+
+
+## Etapas del matching
+
+**4 fases**
+
+Donde las tres primeras representan la fase de "diseño" y la última la de "análisis"
+
+::: incremental
+1.  Distancia
+
+    -   Definición de la medida de proximidad o cercanía utilizada para determinar si dos observaciones son buenos pares.
+
+2.  Algoritmo
+
+    -   Aplicación del algoritmo para la elección de observaciones y conformación de nuevos grupos, en base a la medida de proximidad elegida.
+
+3.  Validación
+
+    -   Evaluación del equilibrio (calidad del matching) de los grupos emparejados. Si la calidad del matching no se satisface se repiten las etapas 1 y 2 hasta que los grupos puedan considerarse coincidentes.
+
+4.  Análisis
+
+    
+:::
+
+::: notes
+
+
+
+:::
+
+## Distancias
+
+Métodos para calcular distancias de covariables
+
+![](figures/distances.png)
+
+
+
+## Distancias
+
+Cual és la reina de las distancias?
+
+<img src="figures/grafo1.png" alt="drawing" style="float: right;"/>
+
+:::  {.fragment}
+
+![](figures/Reina_Isabel.png)
+
+
+
+:::
+
+:::  {.fragment}
+
+$P(X)=Probabilidad(X=1/Z) = f(Z)$
+
+$Pr(Xi/Zi)=\frac{e^{g(Zi)} }{1+ e^{g(Zi)}}$
+
+<!-- ![Model logit](figures/logit.png){.fragment width="65%" height="65%"} -->
+
+:::
+
+
+
+::: {.notes}
+
+La palabra màgica?  
+
+Propensity ......  os suena? 
+
+- Rosenbaum y Rubin (1983) proponen una distancia llamada “propensity score”.  
+
+- El propensity score convierte el problema multidimensional en un problema uni-dimensional Y así reduce el problema de la multi-dimensionalidad
+
+- El “PS” es la probabilidad condicional de estar en un grupo dadas una lista de variables observadas Z
+
+- La idea es que las observaciones que tienen la misma distancia/probabilidad de estar en un grupo tienen la misma distribución de covariables observables
+
+
+:::
+
+## Algoritmos de agrupación
+
+- Exacto 
+
+::: {style="font-size: 0.9em"}
+      
+      Empareja cada unidad tratada con todas las posibles unidades del grupo control de manera que ambos grupos contengan exactamente los mismos valores según las covariables especificadas. Cuándo hay muchas covariables y/o las covariables pueden tomar un amplio rango de valores, exact matching puede no ser posible.
+:::
+
+- Nearest Neighbour (N-N) 
+
+::: {style="font-size: 0.9em"}
+
+      Mejores controles emparejados para cada individuo tratado. Observaciones del grupo control lo más cercana a tratada según la distancia especificada. Misma distancia se selecciona aleatoriamente a uno de estos. La opción caliper (número de desviaciones estándar de la medida de la distancia) establece una distancia máxima entre grupos para ser seleccionados asegurando una igualdad mínima entre observaciones.
+:::
+
+- Subclassification (Subclas) 
+
+::: {style="font-size: 0.9em"}
+
+    Algoritmo que forma estratos, en función de la distribución de las distancias estimadas de tal manera que asegura la igualdad de distribuciones dentro de cada estrato según las covariables seleccionadas. Se pueden descartar observaciones para mejorar la igualdad de distribuciones dentro de cada estrato.
+:::
+
+- Otros métodos (Optimal, Full, Genetic etc..)
+
+::: {.notes}
+
+- Aquí tenemos un listado de algunos de los algoritmos utilizados
+
+- Algunos son parecidos a los que se usan en Clustering, tal como explicó Albert la última sessión
+
+
+:::
+
+```{r eval=FALSE}
+
+# library(MatchIt)
+# ?MatchIt
+
+# Por ejemplo, Chapin (25), con una muestra inicial de 671 unidades tratadas y 523 controles, solamente encontró 23 parejas que emparejasen exactamente según seis covariables categóricas
+
+
+# "(25) Chapin FS. Experimental Designs in. Sociological Research.New York: Harper and Brothers 1947"
+
+
+
+```
+
+## Validación
+
+Evaluación del equilibrio (calidad del matching) de los grupos emparejados. Si la calidad del matching no se satisface se repiten las etapas 1 y 2 hasta que los grupos puedan considerarse coincidentes
+
+```{r}
+
+knitr::include_graphics("figures/Matching_persons_ML.PNG")
+
+
+```
+
+::: notes
+
+- Para evaluar el equilibrio post matching lo primero que hariamos seria hacer un descriptivo comparativo entre grupos post matching. I comparar si ha habido cambios pre-post. No? 
+
+- Por ejemplo si entre cuidadores i no cuidadores en la muestra inicial habia una diferencia de 7 años. Es de esperar que ahora esta diferencia se haya reducido. 
+
+
+- Que metricas usamos para validar el reequilibrio?
+
+:::
+
+
+## Validación
+
+**Estudio cuidadores**
+
+Diferencias medias estandarizadas (SMD) por covariable. Se recomienda un SMD<0.1.
+
+<img src="figures/Prohibit_p_valor.jpg" alt="drawing" width="150" height="150" style="float: right;"/>
+
+
+![Covariate plot](figures/Covariate_plot_cuidadors.png){.fragment width="65%" height="65%"}
+
+::: notes
+
+
+- En realidad la medida que se usa para evaluar si ha equilibrado los grupos en relación a una variable seria la diferencia media estandarizada. 
+
+- Si esta diferencia es inferior a 0.1 decimos que por esa variable hay equilibrio. 
+
+- El p valor no es una medida de distancia
+
+- Para representar graficamente la mejora del equilibrio se hace mediante un covariate Plot, en el cual se representan estas diferencias antes i después del matching
+
+- Aquí tenemos el covariate plot del estudio de Cuidadores
+
+- 7 Variables, que vienen representadas por 32 categorias
+
+:::
+
+
+## Validación
+
+Evaluación de la calidad del equilibrio de las covariables basales después del matching 
+
+[Estudio CVD Real Catalonia](https://dapcat.shinyapps.io/CVD_REAL/#section-covariate-plot)
+
+
+![Covariate plot](figures/Covariate_plot_CVDReal.png){.fragment width="100%" height="100%"}
+
+## Como?
+
+**Herramientas y grados de libertad**
+
+-   Software: Stata, R, SAS
+
+-   Ratio de los grupos (1:1 hasta 1:4)
+
+-   Distancia utilizada (PS, mahalanobis, euclidiana)
+
+-   Algoritmo de agrupación (N-N, Exacto, óptimo, genético .....)
+
+-   Descartes
+
+-   Variables
+
+
+
+
+## Variables
+
+
+::: columns
+
+::: {.column width="50%"}
+
+
+-   Potenciales confusoras segun conocimiento previo
+-   Número?
+
+        - No hay límite. Cuantas más, más difícil encontrar buenos grupos
+
+-   No: outcomes secundarios, ni variables subrogadas
+:::
+
+::: {.column width="50%"}
+
+![](figures/same_dag_matching_regression.jpg){width="60%" height="60%"}
+
+:::
+
+:::
+
+
+::: notes
+
+
+- Que variables incluimos? 
+
+
+
+:::
+
+
+
+
+## Herramientas
+
+**Paquete {Matchit} de R** (version 4.4.0)
+
+**Matching for Causal Inference**
+
+Descripción
+
+::: {style="font-size: 0.7em; text-align: left"}
+
+matchit() is the main function of MatchIt and performs pairing, subset selection, and subclassification with the aim of creating treatment and control groups balanced on included covariates. MatchIt implements the suggestions of Ho, Imai, King, and Stuart (2007) for improving parametric statistical models by preprocessing data with nonparametric matching methods. MatchIt implements a wide range of sophisticated matching methods, making it possible to greatly reduce the dependence of causal inferences on hard-to-justify, but commonly made, statistical modeling assumptions. The software also easily fits into existing research practices since, after preprocessing with MatchIt, researchers can use whatever parametric model they would have used without MatchIt, but produce inferences with substantially more robustness and less sensitivity to modeling assumptions.
+
+:::
+
+Función:
+
+::: {style="font-size: 0.7em"}
+
+matchit(formula,
+        data = NULL,
+        method = "nearest",
+        distance = "glm",
+        link = "logit",
+        distance.options = list(),
+        estimand = "ATT",
+        exact = NULL,
+        mahvars = NULL,
+        antiexact = NULL,
+        discard = "none",
+        reestimate = FALSE,
+        s.weights = NULL,
+        replace = FALSE,
+        m.order = NULL,
+        caliper = NULL,
+        std.caliper = TRUE,
+        ratio = 1,
+        verbose = FALSE,
+        ...)
+
+:::
+
+```{r, echo=FALSE}
+
+# ?matchit
+
+```
+
+::: {.notes}
+
+caliper: for methods that allow it, the width(s) of the caliper(s) to use in matching. Should be a numeric vector with each value named according to the variable to which the caliper applies. To apply to the distance measure, the value should be unnamed. See the individual methods pages for information on whether and how this argument is used. The default is NULL for no caliper.
+
+:::
+
+## MatchIt
+
+Ejemplo
+
+```{r, echo=FALSE, warning=FALSE}
+# MatchIt::matchit()
+
+compareGroups::descrTable(treat ~ age + educ + race + nodegree + married + re74 + re75, 
+                          data = lalonde, show.p.overall = F) %>%   
+  export2md() %>% 
+  kableExtra::kable_classic_2() %>% 
+  kableExtra::kable_styling(font_size = 22)
+
+
+```
+
+::: {.notes}
+
+Aproximación bàsica,  intuitiva
+
+PERO NO Se usan P-VALORES
+
+:::
+
+## MatchIt
+
+Ejemplo
+
+<img src="figures/Prohibit_p_valor.jpg" alt="drawing" width="150" height="150" style="float: right;"/>
+
+```{r, echo=FALSE, warning=FALSE}
+# MatchIt::matchit()
+
+compareGroups::descrTable(treat ~ age + educ + race + nodegree + married + re74 + re75, 
+                          data = lalonde, show.p.overall = T) %>%   
+  export2md() %>% 
+  kableExtra::kable_classic_2() %>% 
+  kableExtra::kable_styling(font_size = 22)
+
+
+```
+
+
+
+## MatchIt
+
+**Paquete MatchIt de R (version 4.4.0)**
+
+
+```{r, echo=TRUE}
+
+dt_temp<-lalonde %>% mutate(idp=1:n())
+
+set.seed(123)
+
+m.out1 <- matchit(treat ~ age + educ + race + nodegree + married + re74 + re75, 
+                  exact = ~ race + married,
+                  distance = "glm",
+                  method = "nearest",
+                  discard = "both",
+                  ratio =  1,
+                  caliper = .1,
+                  # unit.id="idp",
+                  data = dt_temp)
+
+```
+
+## MatchIt
+
+**Paquete MatchIt de R (version 4.4.0)**
+
+```{r,  echo=TRUE}
+
+m.out1
+
+
+pp<-summary(m.out1)
+pp$nn
+
+
+```
+
+
+
+## MatchIt
+
+**Validación**
+
+```{r}
+
+# dades_matchit<-lalonde %>% bind_cols(ps=m.out1$weights) %>% filter(ps==1) %>% select(-ps)
+
+dades_matchit<-get_matches(m.out1)
+
+compareGroups::descrTable(treat ~ age + educ + race + nodegree + married + re74 + re75, 
+                          data = dades_matchit, show.p.overall = F) %>%   
+  export2md() %>% 
+  kableExtra::kable_classic_2() %>% 
+  kableExtra::kable_styling(font_size = 22)
+
+
+```
+
+
+## MatchIt
+
+**Validación**
+
+<img src="figures/Prohibit_p_valor.jpg" alt="drawing" width="150" height="150" style="float: right;"/>
+
+```{r}
+
+# dades_matchit<-lalonde %>% bind_cols(ps=m.out1$weights) %>% filter(ps==1) %>% select(-ps)
+
+dades_matchit<-get_matches(m.out1)
+
+compareGroups::descrTable(treat ~ age + educ + race + nodegree + married + re74 + re75, 
+                          data = dades_matchit, show.p.overall = T) %>%   
+  export2md() %>% 
+  kableExtra::kable_classic_2() %>% 
+  kableExtra::kable_styling(font_size = 22)
+
+
+```
+
+
+## MatchIt
+
+**Validación**
+
+```{r}
+
+
+covariate_plot(m.out1, subtitle="Grupo intervención vs Control")
+
+
+
+```
+
+## Muestreo por densidad de incidencia
+
+**Matching individual/exacto**
+
+Apareamiento por densidad de incidencia
+
+
+::: {.incremental}
+
+-   Diseño: Caso-control anidado / Cohorte dinámica (o abierta) 
+-   Los controles se seleccionan a medida que se producen los casos (Matching on time)
+-   Se construyen conjuntos de riesgo emparejados
+-   Los controles pueden ser remuestrados(más de una vez por caso)
+-   Los controles se pueden convertir en casos
+
+:::
+
+::: {.notes}
+
+- Vamos a ver otro tipo de muestreo. 
+
+- Lo que hemos visto hasta ahora, es matching por frequencia, donde tenemos identificados i caracterizados todos los sujetos en un momento concreto. y reequilibras la distribución de covariables por frequencia sin identificar grupos a riesgo. 
+
+- Por ejemplo en el tema de los cuidadores. Teniamos se BD ENSE el dia que hacen la enquesta todas sus caracteristicas. 
+
+- El estudio de antidiabeticos, teniamos para cada individuo  su fecha de inclusión (fechas de inicio de tratamiento) i caracterizados todos los sujetos potenciales, edad antecedentes CV, farmacos etc...  
+
+Que passa cuándo no tenemos los controles (o uno de los grupos) identificados aun? o por fecha?
+
+Por ejemplo un estudio caso control , donde si podemos identificar los casos, con su fecha i definir su edad caracteristicas etc... Però aun no estan seleccionados los potenciales controles?  por lo tanto no sabemos su fecha i por lo tanto que caracterización tienen en su momento de inclusión?
+
+
+
+:::
+
+## Muestreo por densidad de incidencia
+
+**Muestreo por densidad de incidencia**
+
+```{r, fig.cap="Esquema de seleccion de casos"}
+ 
+knitr::include_graphics("figures/Matching_density_incidence.PNG")
+
+```
+
+::: {.notes}
+
+Aquí vemos un esquema de muestreo por densidad de incidecia. 
+Por ejemplo imaginemos que queremos buscar grupos de DM's incidentes i sus controles respectivos. 
+
+- Aquí tenemos como van apareciendo los casos durante la fase de reclutamitneo. El primer caso que aparece es la senyora Manuela en el mes 3. Aquí buscamos una señora entre todas las potenciales Controles i disponibles. 
+
+- Por lo tanto seleccionamos la señora Paquita del mismo año de nacimiento. 
+
+- El siguiente caso en aparecer es el señor Gustavo el mes 4. Entre todos los hombres mismo año nacimiento buscamos su homologo en fecha y encontramos a Felipe (coetanio). 
+
+- Y seguimos todo el proceso hasta tener todos los grupos a riesgo. 
+
+- Fijaros que Don Felipe que era control de Gustavo, a los 12 meses se le diagnostica una diabetis, con lo cual este passa a ser caso y se procede a buscar su pareja de vaile ya que no se ha descartado. 
+
+
+
+:::
+
+
+
+## Muestreo por densidad de incidencia
+
+**Ejemplo: Cohorte dinámica**
+
+[Estudio DM_TBC](https://jrealgatius.github.io/TBC_ANALISIS/codi/shiny/DashBoard_TB.html#sampling-and-follow-up-sheeme)
+
+
+```{r, echo=TRUE}
+library(Macedonia)
+dat2<-Macedonia::match_density_incidence(dt=Macedonia::dat,
+                          id="idp",
+                          llistaPS=c("sex"),
+                          eventcontrol=TRUE,
+                          reemplacement=FALSE,
+                          numcores=NA,
+                          Ncontrols=1,
+                          seed=123)
+dat$idp %>% length()
+dat2$idp %>% length()
+dat2 %>% head() %>% select(-c(diabetes,heartdis,byear)) %>% kableExtra::kable() %>% 
+  kableExtra::kable_classic_2() %>% kableExtra::kable_styling(font_size = 15)
+
+```
+
+::: {.notes}
+
+- Aquí tenemos un ejemplo con las rutinas que programamos. 
+
+- La tenemos dentro de un paquete que se llama Macedonia. Le tienes que tener en cuenta los potenciales casos, con sus fechas, y el resto es importante las fechas de censura, o sea hasta cuando un control puede ser seleccionado como pareja. 
+
+- Por ejemplo si una persona fallece, a partir de este momento no se puede seleccionar. 
+
+- También si un caso puede ser seleccionado como control, antes de serlo 
+y si los controles puede son reemplazables o no. 
+
+- Genera grupos a riesgo, de forma exacta, y como son procesos altamente intensivos computacionalmente, nosotros incluimos la posibilidad de trabajar en distintos nucleos del ordenador.  Ya que con Bases de datos grandes pueden tardar dias. 
+
+- Otro parámetro es el de la semilla de aleatorización por si hay que repetir el proceso y que salga el mismo resultado. El
+
+
+:::
+## Muestreo por densidad de incidencia
+
+**Ejemplo: Caso-Control**
+
+```{r, echo=TRUE}
+dades<-readRDS("dades_setMatch.Rds")
+# data de censura en els casos com a molt la data de CAS 
+dades<-dades %>% mutate(dtindex_control=ifelse(event==1,dtindex_case,dtindex_control))
+llistaPS<-c("sexe","year_DM2","year_naix")
+
+dt_aparellada<-match_density_incidence(dades,
+                                       id="id",
+                                       llistaPS=llistaPS,
+                                       eventcontrol = T,
+                                       reemplacement=F,
+                                       Ncontrols = 10,
+                                       seed=131)
+dades %>% n_distinct("id")
+dt_aparellada %>% n_distinct("id")
+dt_aparellada %>% select(id,.caseid,.dtindex,.event,.n,Fecha_caso=dat_cas,llistaPS) %>% 
+  mutate(.dtindex=lubridate::as_date(.dtindex)) %>% 
+  head(5) %>% kableExtra::kable() %>% kableExtra::kable_classic() %>% kableExtra::kable_styling(font_size = 15)
+
+```
+
+
+
+
+## ¿Cuándo No?
+
+::: incremental
+
+-   Muestras insuficientes ("pequeñas")
+
+-   Objetivos 
+
+      - Descriptivos
+              
+              - Multivariantes: Clustering, PCA, factorial
+
+      - Estimar parámetros poblacionales (ej.prevalencia)
+      
+      - Predictivos
+
+-   Múltiples hipótesis / objetivos
+
+:::
+
+
+::: {.notes}
+
+- ESTUDIOS PEQUEÑOS. Con pocas covariables las posibles combinaciones pueden hacer inviable conseguir una muestra emparejada. Pensad que solo para encontrar una muestra emparejada con 10 variables binarias necessitariamos un minimo de 1024 combinaciones, por lo tanto un minimo de 1000 por grupo = 2000
+
+- Estudio tipo: prevalencia de X y factores asociados
+
+- MODELO PREDICTIVO: 
+  Lo que realmente interesa es que classifique bien, sin buscar interpretabilidad de los predictores (ni causalidad)
+  Require toda la poblacion i que ésta esté bien representada. 
+  El enfoque no es sobre un unico predictor
+
+- Múltiples hipótesis:
+
+Ejemplo COVID
+
+Tenemos una base de datos de COVID y queremos
+
+1. Incidencia de casos De CODID 
+2. Evaluar pronostico / complicaciones del COVID
+3. Efectividad de la vacuna contra el COVID i/o la vacuna de la gripe proteje contra la infección o contra las omplicaciones generada
+5. Evaluar el rendimiento de un test diagnostico
+6. Hacer un Score de riesgo i modelos predictivos etc...
+7. Tendencia en la evolución de la mortalidad por COVID
+8. ver si los COVID persistentes tiene los ojos azules
+
+....
+
+:::
+
+
+## ¿Cuándo No?
+
+Hipótesis / objetivos múltiples
+
+![](figures/Pizza_post_Reviewers.jpg){width="50%" height="50%"}
+
+::: notes
+
+És lícito, hacerse muchas preguntas sobre investigación clínia Pero..... hay riesgo de que nos salga esto. 
+
+Esto podria ser el resultado de un Paper estilo Frankentain / Protocolo con multiples hipotesis
+
+Se hace dificil imaginar que con una misma receta podamos concinar multiples platos i que salgan todos buenos.
+
+Misma temperatura del horno, tiempo de cocción etc...
+
+En definitiva si tenemos muchas preguntas i/o No sabemos muy bien lo que queremos, no tienen sentido aplicar este tipo aproximación
+
+:::
+
+## ¿Cuándo Sí?
+
+::: incremental
+
+-   Objetivos analíticos confirmatorios
+-   Inferencia causal
+-   Diseños
+
+    - Transversal/Cohortes /Caso-control
+
+-   Variable principal (X o Y) de agrupación de naturaleza categórica (preferentemente binaria)[^4]
+
+-   Estudio comparativo aislando factores ya conocidos
+
+:::
+
+
+::: notes
+
+- Del mismo modo que Dicotomizar una variable de naturaleza continua y analizarla es totalmente ineficiente a nivel estadístico ya que perdemos información. Tampoco lo seria para hacer matching con esta. Pues hay otras formas más inteligentes de analizarla. 
+
+- Ejemplos de mala praxis serian: 
+
+- Utilizar buen o mal control de la  Hb1AC si disponemos la HbA1c , 
+Bajada ràpida de la HB (Si/No) cuando disponemos de la reducción absoluta. 
+Obesidad (Si/No) como una categorización del IMC 
+
+
+:::
+
+[^4]: Altman DG, Royston P. The cost of dichotomising continuous variables. BMJ. 2006 May 6;332(7549):1080. doi: 10.1136/bmj.332.7549.1080. PMID: 16675816; PMCID: PMC1458573.
+
+
+## Para concluir...
+
+Razones
+
+::: incremental
+
++   [Simplicidad]{style="color: green"}
+
++   [Facilidad de evaluar su viabilidad]{style="color: green"}
+
++   [Evaluar grado de solapamiento]{style="color: green"}
+
+-   [Conclusiones contextuales]{style="color: red"}
+
+:::
+
+::: notes
+- Es más simple determinar si el modelo ha sido adecuadamente especificado (solo con verificar la homogeneidad de los grupos después del matching.
+
+- Se puede examinar explícitamente el grado de solapamiento o superposición de la distribución de las covariables entre los grupos. Si hay substanciales diferencias de las covariables entre grupos, estas serán evidentes, dado el pequeño número de sujetos emparejados.
+
+-   Las conclusiones validas en el contexto de la muestra finalmente analizada i por lo tanto a las características de la población matcheadas
+
+:::
+
+
+
+## Para concluir...
+
+::: incremental
+
+-   Modelos paramétricos funcionan, pero .....
+
+-   Modelos semiparamétricos funcionan mejor
+
+-   Robustez de los métodos Matching
+
+-   Analisis dirigido a un objetivo concreto
+
+-   Separan el diseño del análisis
+
+      - El outcome es invisible al investigador
+
+:::
+
+::: notes
+
+-   Riesgo de sesgo en métodos paramétricos
+
+-   La estimación paramétrica con GLM (Reg logística), como método de ajuste en presencia de confusión, puede resultar muy sesgada si el modelo esta mal seleccionado
+
+-   La estimación mediante un modelo GAM (Semi paramétricos) proporciona mejores resultados que los GLM paramétricos en términos de reducción del sesgo de confusión
+
+-   Mayor robustez de los metodos Matching
+
+-   Menor tasa de falsos positivos, estimaciones más creibles con menor sesgo
+
+-   Análisis dirigido a un objetivo concreto. 
+
+O sea estos metodos solo sirven para evaluar un objetivo concreto. ESTADISTICA DE PRECISIÓN
+
+
+
+-   Cuándo se usan las técnicas de matching, la construcción de los grupos se puede realizar sin ninguna referencia al outcome. Solamente una vez se acepta el equilibrio de los grupos se realiza la estimación del efecto del tratamiento sobre el outcome. 
+
+- Sin embargo, cuándo utilizamos técnicas de regresión, el outcome siempre está visible, y el investigador se enfrenta continuamente a la sutil tentación de modificar el modelo de regresión hasta que se alcanza el resultado esperado.
+
+- Al inicio de la presentación de la importancia de la pregunta i el objetivo. 
+
+- Otra cosa que es importante es si lo que realmente vemos en los datos i nuestro analisis sea lo que realmente és i no siempre lo que queramos ver, intentando evitar un poco el sesgo de confirmación 
+
+:::
+
+## Conclusiones
+
+
+
+![](figures/sesgo_confirmacion.jpg){width=50% height=50%}
+
+
+::: {.notes}
+
+Evitando el sesgo de confirmación. 
+
+
+
+:::
+
+## Conclusiones
+
+Sesgo de confirmación
+
+![](figures/Homer_simpson.gif){width=50% height=50%}
+
+::: {.notes}
+
+- Aquí tenemos a Homer Simpson con otro sesgo de confirmación. 
+
+- La verdad o realidad en investigación es muy dificil de saber, pero lo que tenemos que hacer es  
+
+- Un esfuerzo en ser objetivo y si nuestro analisis no confirma nuestra hipótesis preguntar-se Poqué no forzar el analisis para que salga lo que nosotros creemos que tendria que salir. 
+
+
+:::
+
+
+
+## Muchas grácias
+
+
+Último MEME
+
+![](figures/Tobogan_quadrat.gif){width=50% height=50%}
+
+
+::: notes
+
+Espero no haberos mareado mucho con tanto matching
+
+:::
+
+
+## Bibliografía
+
+
+::: {style="font-size: 0.6em"}
+
+- Rosenbaum, P.R. and D.B. Rubin (1983), “The Central Role of the Propensity Score in Observational Studies for Causal Effects”, Biometrika 70, 1, 41–55.
+
+- Ho DE, Imai K, King G, Stuart EA. Matching as nonparametric preprocessing for reducing model dependence in parametric causal inference. Political analysis 2007;15(3):199-236.
+
+
+- Martens EP, Pestman WR, de Boer A, Belitser SV, Klungel OH. Systematic differences in treatment effect estimates between propensity score methods and logistic regression. Int J Epidemiol 2008 Oct;37(5):1142-1147.
+
+- Kurth T, Walker AM, Glynn RJ, Chan KA, Gaziano JM, Berger K, et al. Results of multivariable logistic regression, propensity matching, propensity adjustment, and propensity-based weighting under conditions of nonuniform effect. Am J Epidemiol 2006 Feb 1;163(3):262-270.
+
+
+- Austin PC. The performance of different propensity score methods for estimating marginal odds ratios. Stat Med 2007;26(16):3078-3094.
+
+- Stuart EA. Matching methods for causal inference: A review and a look forward. Stat Sci 2010 Feb 1;25(1):1-21.
+
+- King G, Nielsen R, Coberley C, Pope JE, Wells A. Comparative effectiveness of matching methods for causal inference. Unpublished manuscript 2011;15.
+
+- King G, Nielsen R. Why propensity scores should not be used for matching. Copy at http://j.mp/1sexgVw Download Citation BibTex Tagged XML Download Paper 2016;378.
+
+- King G, Lucas C, Nielsen R, King G, Pan J, Roberts M, et al. The Balance-Sample Size Frontier in Matching Methods for Causal Inference}. PS: Political Science and Politics} 2014;42:S11-S22.
+Pearce N. Analysis of matched case-control studies. BMJ 2016 Feb 25;352:i969
+
+- Real J, Forné C, Roso-Llorach A, Martínez-Sánchez JM. Quality Reporting of Multivariable Regression Models in Observational Studies: Review of a Representative Sample of Articles Published in Biomedical Journals. Medicine (Baltimore). 2016 May;95(20)
+
+- González-de Paz L, Real J, Borrás-Santos A, Martínez-Sánchez JM, Rodrigo-Baños V, Dolores Navarro-Rubio M. Associations between informal care, disease, and risk factors: A Spanish country-wide population-based study. J Public Health Policy. 2016 May;37(2):173-89. doi: 10.1057/jphp.2016.3. Epub 2016 Feb 11. PubMed PMID: 26865318. 
+
+- Altman DG, Royston P. The cost of dichotomising continuous variables. BMJ. 2006 May 6;332(7549):1080. doi: 10.1136/bmj.332.7549.1080. PMID: 16675816; PMCID: PMC1458573.
+
+
+:::
+
+
+## Material extra 
+
+![](figures/captura_article_lesio_renal2.png)
+
+
+
