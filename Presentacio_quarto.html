@@ -7,7 +7,7 @@
 <link href="Presentacio_quarto_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="Presentacio_quarto_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="Presentacio_quarto_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.0.36">
+  <meta name="generator" content="quarto-1.1.189">
 
   <meta name="author" content="Jordi Real   jreal@idiapjgol.info">
   <title>Métodos de emparejamiento (Matching)</title>
@@ -19,10 +19,15 @@
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    span.underline{text-decoration: underline;}
-    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
     pre > code.sourceCode { white-space: pre; position: relative; }
     pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -93,6 +98,8 @@
   <link href="Presentacio_quarto_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="Presentacio_quarto_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="Presentacio_quarto_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="Presentacio_quarto_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="Presentacio_quarto_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
   <link href="Presentacio_quarto_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
   <style type="text/css">
 
@@ -690,7 +697,7 @@
 </div>
 </div>
 </div>
-<p></p><figcaption>Figure 1: DAG</figcaption><p></p>
+<p></p><figcaption>Figure&nbsp;1: DAG</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -782,16 +789,8 @@
 <section id="modelos-de-regressión" class="slide level2">
 <h2>Modelos de regressión</h2>
 <p><strong>Asunciones sobre modelos</strong></p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="figures/Perfect_model.jpg" width="396"></p>
-</figure>
-</div>
-</div>
-</div>
-<aside class="notes">
+
+<img data-src="figures/Perfect_model.jpg" width="396" class="r-stretch quarto-figure-center"><aside class="notes">
 <ul>
 <li><p>Cuales son las asumciones sobre los modelos?</p></li>
 <li><p>Aquí tenemos este MEME que representa el modelo perfecto però hay que tener cuidado por culpa de:</p></li>
@@ -812,16 +811,8 @@
 <section id="modelos-de-regressión-1" class="slide level2">
 <h2>Modelos de regressión</h2>
 <p><strong>Asunciones sobre modelos de regressión</strong></p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="figures/Risk_regression_model.jpg" width="414"></p>
-</figure>
-</div>
-</div>
-</div>
-<aside class="notes">
+
+<img data-src="figures/Risk_regression_model.jpg" width="414" class="r-stretch quarto-figure-center"><aside class="notes">
 <ul>
 <li><p>Además de los outliers i la Nonlinealidad</p></li>
 <li><p>todo esto es como una Amenaza que aveces puede poner en duda las inferencias realizadas a través de los modelos</p></li>
@@ -937,7 +928,7 @@
 <!-- ::: aside -->
 <!-- Ajustado por: Edad, sexo, Población, Composición familiar, Nivel educativo, Ingresos familiarias, clase social,,,,, -->
 <!-- ::: -->
-<aside><ol class="aside-footnotes"><li id="fn1" role="doc-endnote"><p>Ajustado por: Edad, sexo, Población, Composición familiar, Nivel educativo, Ingresos familiarias, clase social</p></li></ol></aside></section>
+<aside><ol class="aside-footnotes"><li id="fn1"><p>Ajustado por: Edad, sexo, Población, Composición familiar, Nivel educativo, Ingresos familiarias, clase social</p></li></ol></aside></section>
 <section id="métodos-de-ajuste-1" class="slide level2">
 <h2>Métodos de ajuste</h2>
 <div class="fragment semi-fade-out">
@@ -1046,7 +1037,7 @@
 <li>Distintos escenarios donde la Relación confusor Z vs P(Y):</li>
 </ul>
 <p><img src="figures/GrafoZY.png" alt="drawing" style="float: right;"></p>
-<p><img data-src="figures/simulaciones_Z_Y.png" data-align="center" style="width:55.0%;height:55.0%"></p>
+<p><img data-src="figures/simulaciones_Z_Y.png" style="width:55.0%;height:55.0%" data-align="center"></p>
 <aside class="notes">
 <p>Por qué en comparación sobre otras técnicas?</p>
 <style type="text/css">
@@ -1124,12 +1115,8 @@
 <h2>Estudio de simulación</h2>
 <p><em>Resultados escenario</em> <strong>No lineal</strong></p>
 <p>Estimación de efecto nulo (OR=1) según el método de ajuste</p>
-<div class="cell">
-<div class="cell-output-display">
-<p><img data-src="figures/Estimaciones_Esc_NoLineal2.png" width="330"></p>
-</div>
-</div>
-<aside class="notes">
+
+<img data-src="figures/Estimaciones_Esc_NoLineal2.png" width="330" class="r-stretch"><aside class="notes">
 <p>Que passa en terminos de error de tipo I. Recordemos que estamos SABEMOS QUE NO HAY RELACIÓN ENTRE X - Y Por ejemplo les gusta ls pelis de almodobar o el chocolate y la depressión.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
@@ -1244,9 +1231,9 @@
 <p>Propensity …… os suena?</p>
 <ul>
 <li><p>Rosenbaum y Rubin (1983) proponen una distancia llamada “propensity score”.</p></li>
-<li><p>El propensity score convierte el problema multidimensional en un problema uni-dimensional Y así reduce el problema de la multi-dimensionalidad</p></li>
 <li><p>El “PS” es la probabilidad condicional de estar en un grupo dadas una lista de variables observadas Z</p></li>
 <li><p>La idea es que las observaciones que tienen la misma distancia/probabilidad de estar en un grupo tienen la misma distribución de covariables observables</p></li>
+<li><p>El propensity score convierte el problema multidimensional en un problema uni-dimensional Y así reduce el problema de la multi-dimensionalidad</p></li>
 </ul>
 <style type="text/css">
         span.MJX_Assistive_MathML {
@@ -1306,12 +1293,8 @@
 <section id="validación" class="slide level2">
 <h2>Validación</h2>
 <p>Evaluación del equilibrio (calidad del matching) de los grupos emparejados. Si la calidad del matching no se satisface se repiten las etapas 1 y 2 hasta que los grupos puedan considerarse coincidentes</p>
-<div class="cell">
-<div class="cell-output-display">
-<p><img data-src="figures/Matching_persons_ML.PNG" width="464"></p>
-</div>
-</div>
-<aside class="notes">
+
+<img data-src="figures/Matching_persons_ML.PNG" width="464" class="r-stretch"><aside class="notes">
 <ul>
 <li><p>Para evaluar el equilibrio post matching lo primero que hariamos seria hacer un descriptivo comparativo entre grupos post matching. I comparar si ha habido cambios pre-post. No?</p></li>
 <li><p>Por ejemplo si entre cuidadores i no cuidadores en la muestra inicial habia una diferencia de 7 años. Es de esperar que ahora esta diferencia se haya reducido.</p></li>
@@ -1880,21 +1863,16 @@ Discarded          57       8</code></pre>
 </section>
 <section id="muestreo-por-densidad-de-incidencia-1" class="slide level2">
 <h2>Muestreo por densidad de incidencia</h2>
-<p><strong>Muestreo por densidad de incidencia</strong></p>
-<div class="cell">
-<div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="figures/Matching_density_incidence.PNG" width="330"></p>
-<p></p><figcaption>Esquema de seleccion de casos</figcaption><p></p>
+<p><img data-src="figures/Matching_density_incidence.PNG" style="width:55.0%;height:55.0%"></p>
+<p></p><figcaption>Esquema de selección de casos</figcaption><p></p>
 </figure>
-</div>
-</div>
 </div>
 <aside class="notes">
 <p>Aquí vemos un esquema de muestreo por densidad de incidecia. Por ejemplo imaginemos que queremos buscar grupos de DM’s incidentes i sus controles respectivos.</p>
 <ul>
-<li><p>Aquí tenemos como van apareciendo los casos durante la fase de reclutamitneo. El primer caso que aparece es la senyora Manuela en el mes 3. Aquí buscamos una señora entre todas las potenciales Controles i disponibles.</p></li>
+<li><p>Vemos como van apareciendo los casos durante la fase de reclutamitneo. El primer caso que aparece es la senyora Manuela en el mes 3. Aquí buscamos una señora entre todas las potenciales Controles i disponibles.</p></li>
 <li><p>Por lo tanto seleccionamos la señora Paquita del mismo año de nacimiento.</p></li>
 <li><p>El siguiente caso en aparecer es el señor Gustavo el mes 4. Entre todos los hombres mismo año nacimiento buscamos su homologo en fecha y encontramos a Felipe (coetanio).</p></li>
 <li><p>Y seguimos todo el proceso hasta tener todos los grupos a riesgo.</p></li>
@@ -2031,7 +2009,7 @@ Discarded          57       8</code></pre>
 <li><p>Por ejemplo si una persona fallece, a partir de este momento no se puede seleccionar.</p></li>
 <li><p>También si un caso puede ser seleccionado como control, antes de serlo y si los controles puede son reemplazables o no.</p></li>
 <li><p>Genera grupos a riesgo, de forma exacta, y como son procesos altamente intensivos computacionalmente, nosotros incluimos la posibilidad de trabajar en distintos nucleos del ordenador. Ya que con Bases de datos grandes pueden tardar dias.</p></li>
-<li><p>Otro parámetro es el de la semilla de aleatorización por si hay que repetir el proceso y que salga el mismo resultado. El</p></li>
+<li><p>Otro parámetro es el de la semilla de aleatorización por si hay que repetir el proceso y que salga el mismo resultado.</p></li>
 </ul>
 <style type="text/css">
         span.MJX_Assistive_MathML {
@@ -2249,7 +2227,7 @@ Discarded          57       8</code></pre>
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
-<aside><ol class="aside-footnotes"><li id="fn2" role="doc-endnote"><p>Altman DG, Royston P. The cost of dichotomising continuous variables. BMJ. 2006 May 6;332(7549):1080. doi: 10.1136/bmj.332.7549.1080. PMID: 16675816; PMCID: PMC1458573.</p></li></ol></aside></section>
+<aside><ol class="aside-footnotes"><li id="fn2"><p>Altman DG, Royston P. The cost of dichotomising continuous variables. BMJ. 2006 May 6;332(7549):1080. doi: 10.1136/bmj.332.7549.1080. PMID: 16675816; PMCID: PMC1458573.</p></li></ol></aside></section>
 <section id="para-concluir" class="slide level2">
 <h2>Para concluir…</h2>
 <p>Razones</p>
@@ -2416,6 +2394,7 @@ Discarded          57       8</code></pre>
   <script src="Presentacio_quarto_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
   <script src="Presentacio_quarto_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
   <script src="Presentacio_quarto_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="Presentacio_quarto_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
   <script src="Presentacio_quarto_files/libs/revealjs/plugin/quarto-support/support.js"></script>
   
 
@@ -2437,7 +2416,8 @@ Discarded          57       8</code></pre>
 'autoAnimateEasing': "ease",
 'autoAnimateDuration': 1,
 'autoAnimateUnmatched': true,
-'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true},
 'smaller': true,
  
         // Display controls in the bottom right corner
@@ -2608,7 +2588,7 @@ Discarded          57       8</code></pre>
         },
 
         // reveal.js plugins
-        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
 
           RevealMath,
           RevealNotes,
@@ -2727,7 +2707,8 @@ Discarded          57       8</code></pre>
       for (var i=0; i<noterefs.length; i++) {
         const ref = noterefs[i];
         tippyHover(ref, function() {
-          let href = ref.getAttribute('href');
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
           try { href = new URL(href).hash; } catch {}
           const id = href.replace(/^#\/?/, "");
           const note = window.document.getElementById(id);

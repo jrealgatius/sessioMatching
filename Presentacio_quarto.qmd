@@ -10,7 +10,7 @@ format:
     logo: "logos/Logo_dapcat_idiap.png"
     footer: "Métodos de Matching en estudios retrospectivos"
     theme: simple # solarized # simple
-    chalkboard: false
+    chalkboard: true
     css: logo.css
 ---
 
@@ -839,11 +839,13 @@ Propensity ......  os suena?
 
 - Rosenbaum y Rubin (1983) proponen una distancia llamada “propensity score”.  
 
-- El propensity score convierte el problema multidimensional en un problema uni-dimensional Y así reduce el problema de la multi-dimensionalidad
 
 - El “PS” es la probabilidad condicional de estar en un grupo dadas una lista de variables observadas Z
 
 - La idea es que las observaciones que tienen la misma distancia/probabilidad de estar en un grupo tienen la misma distribución de covariables observables
+
+
+- El propensity score convierte el problema multidimensional en un problema uni-dimensional Y así reduce el problema de la multi-dimensionalidad
 
 
 :::
@@ -1242,20 +1244,18 @@ Por ejemplo un estudio caso control , donde si podemos identificar los casos, co
 
 ## Muestreo por densidad de incidencia
 
-**Muestreo por densidad de incidencia**
 
-```{r, fig.cap="Esquema de seleccion de casos"}
- 
-knitr::include_graphics("figures/Matching_density_incidence.PNG")
 
-```
+![Esquema de selección de casos](figures/Matching_density_incidence.PNG){width="55%" height="55%"}
+
+
 
 ::: {.notes}
 
 Aquí vemos un esquema de muestreo por densidad de incidecia. 
 Por ejemplo imaginemos que queremos buscar grupos de DM's incidentes i sus controles respectivos. 
 
-- Aquí tenemos como van apareciendo los casos durante la fase de reclutamitneo. El primer caso que aparece es la senyora Manuela en el mes 3. Aquí buscamos una señora entre todas las potenciales Controles i disponibles. 
+- Vemos como van apareciendo los casos durante la fase de reclutamitneo. El primer caso que aparece es la senyora Manuela en el mes 3. Aquí buscamos una señora entre todas las potenciales Controles i disponibles. 
 
 - Por lo tanto seleccionamos la señora Paquita del mismo año de nacimiento. 
 
@@ -1308,7 +1308,7 @@ y si los controles puede son reemplazables o no.
 
 - Genera grupos a riesgo, de forma exacta, y como son procesos altamente intensivos computacionalmente, nosotros incluimos la posibilidad de trabajar en distintos nucleos del ordenador.  Ya que con Bases de datos grandes pueden tardar dias. 
 
-- Otro parámetro es el de la semilla de aleatorización por si hay que repetir el proceso y que salga el mismo resultado. El
+- Otro parámetro es el de la semilla de aleatorización por si hay que repetir el proceso y que salga el mismo resultado. 
 
 
 :::
