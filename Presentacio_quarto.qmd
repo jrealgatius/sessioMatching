@@ -1,13 +1,13 @@
 ---
 title: "Métodos de emparejamiento (Matching)"
 subtitle: "En grandes bases de datos"
-author: "Jordi Real <br> jreal@idiapjgol.info"
-institute: "IDIAP- Jordi Gol <br> USR-BCN. Grup DAP-Cat"
+author: "Jordi Real <br> jordireal@gmail.com"
+institute: "Digital Health Validation Center <br> Hospital Sant Pau"
 slide-number: true
 smaller: true
 format:
   revealjs:
-    logo: "logos/Logo_dapcat_idiap.png"
+    logo: "logos/Logo_dapcat_idiap_2.png"
     footer: "Métodos de Matching en estudios retrospectivos"
     theme: simple # solarized # simple
     chalkboard: true
@@ -28,7 +28,7 @@ source("global_funcions.R")
 
 ## Métodos de Matching
 
-**Jordi Real - 2022**
+**Jordi Real - 2024**
 
 ![](figures/Tesis_caratula.png){width="100%" height="100%" fig-align="center"}
 
@@ -1280,7 +1280,9 @@ Por ejemplo imaginemos que queremos buscar grupos de DM's incidentes i sus contr
 
 ```{r, echo=TRUE}
 library(Macedonia)
-dat2<-Macedonia::match_density_incidence(dt=Macedonia::dat,
+
+
+dat2<-Macedonia::match_density_incidence(dt=Macedonia::dat_test,
                           id="idp",
                           llistaPS=c("sex"),
                           eventcontrol=TRUE,
@@ -1288,10 +1290,11 @@ dat2<-Macedonia::match_density_incidence(dt=Macedonia::dat,
                           numcores=NA,
                           Ncontrols=1,
                           seed=123)
-dat$idp %>% length()
-dat2$idp %>% length()
+# dat$idp %>% length()
+# dat2$idp %>% length()
 dat2 %>% head() %>% select(-c(diabetes,heartdis,byear)) %>% kableExtra::kable() %>% 
   kableExtra::kable_classic_2() %>% kableExtra::kable_styling(font_size = 15)
+
 
 ```
 

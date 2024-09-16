@@ -5,11 +5,12 @@
 <script src="Presentacio_quarto_files/libs/quarto-html/popper.min.js"></script>
 <script src="Presentacio_quarto_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="Presentacio_quarto_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Presentacio_quarto_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="Presentacio_quarto_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="Presentacio_quarto_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.1.189">
+  <meta name="generator" content="quarto-1.3.353">
 
-  <meta name="author" content="Jordi Real   jreal@idiapjgol.info">
+  <meta name="author" content="Jordi Real   jordireal@gmail.com">
   <title>Métodos de emparejamiento (Matching)</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -25,9 +26,10 @@
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
       width: 0.8em;
-      margin: 0 0.8em 0.2em -1.6em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
+    /* CSS for syntax highlighting */
     pre > code.sourceCode { white-space: pre; position: relative; }
     pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -93,7 +95,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="Presentacio_quarto_files/libs/revealjs/dist/theme/quarto.css" id="theme">
+  <link rel="stylesheet" href="Presentacio_quarto_files/libs/revealjs/dist/theme/quarto.css">
   <link rel="stylesheet" href="logo.css">
   <link href="Presentacio_quarto_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="Presentacio_quarto_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
@@ -139,44 +141,44 @@
     font-weight: 400;
   }
 
-  .callout.callout-captioned.callout-style-simple .callout-body {
+  .callout.callout-titled.callout-style-simple .callout-body {
     margin-top: 0.2em;
   }
 
-  .callout:not(.callout-captioned) .callout-body {
+  .callout:not(.callout-titled) .callout-body {
       display: flex;
   }
 
-  .callout:not(.no-icon).callout-captioned.callout-style-simple .callout-content {
+  .callout:not(.no-icon).callout-titled.callout-style-simple .callout-content {
     padding-left: 1.6em;
   }
 
-  .callout.callout-captioned .callout-header {
+  .callout.callout-titled .callout-header {
     padding-top: 0.2em;
     margin-bottom: -0.2em;
   }
 
-  .callout.callout-captioned .callout-caption  p {
+  .callout.callout-titled .callout-title  p {
     margin-top: 0.5em;
     margin-bottom: 0.5em;
   }
     
-  .callout.callout-captioned.callout-style-simple .callout-content  p {
+  .callout.callout-titled.callout-style-simple .callout-content  p {
     margin-top: 0;
   }
 
-  .callout.callout-captioned.callout-style-default .callout-content  p {
+  .callout.callout-titled.callout-style-default .callout-content  p {
     margin-top: 0.7em;
   }
 
-  .callout.callout-style-simple div.callout-caption {
+  .callout.callout-style-simple div.callout-title {
     border-bottom: none;
     font-size: .9rem;
     font-weight: 600;
     opacity: 75%;
   }
 
-  .callout.callout-style-default  div.callout-caption {
+  .callout.callout-style-default  div.callout-title {
     border-bottom: none;
     font-weight: 600;
     opacity: 85%;
@@ -208,7 +210,7 @@
     background-size: 0.9rem 0.9rem;
   }
 
-  .callout-caption {
+  .callout-title {
     display: flex
   }
     
@@ -221,16 +223,16 @@
     display: none !important;
   }
 
-  .callout.callout-captioned .callout-body > .callout-content > :last-child {
+  .callout.callout-titled .callout-body > .callout-content > :last-child {
     margin-bottom: 0.5rem;
   }
 
-  .callout.callout-captioned .callout-icon::before {
+  .callout.callout-titled .callout-icon::before {
     margin-top: .5rem;
     padding-right: .5rem;
   }
 
-  .callout:not(.callout-captioned) .callout-icon::before {
+  .callout:not(.callout-titled) .callout-icon::before {
     margin-top: 1rem;
     padding-right: .5rem;
   }
@@ -245,7 +247,7 @@
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEU0lEQVRYCcVXTWhcVRQ+586kSUMMxkyaElstCto2SIhitS5Ek8xUKV2poatCcVHtUlFQk8mbaaziwpWgglJwVaquitBOfhQXFlqlzSJpFSpIYyXNjBNiTCck7x2/8/LeNDOZxDuEkgOXe++553zfefee+/OYLOXFk3+1LLrRdiO81yNqZ6K9cG0P3MeFaMIQjXssE8Z1JzLO9ls20MBZX7oG8w9GxB0goaPrW5aNMp1yOZIa7Wv6o2ykpLtmAPs/vrG14Z+6d4jpbSKuhdcSyq9wGMPXjonwmESXrriLzFGOdDBLB8Y6MNYBu0dRokSygMA/mrun8MGFN3behm6VVAwg4WR3i6FvYK1T7MHo9BK7ydH+1uurECoouk5MPRyVSBrBHMYwVobG2aOXM07sWrn5qgB60rc6mcwIDJtQrnrEr44kmy+UO9r0u9O5/YbkS9juQckLed3DyW2XV/qWBBB3ptvI8EUY3I9p/67OW+g967TNr3Sotn3IuVlfMLVnsBwH4fsnebJvyGm5GeIUA3jljERmrv49SizPYuq+z7c2H/jlGC+Ghhupn/hcapqmcudB9jwJ/3jvnvu6vu5lVzF1fXyZuZZ7U8nRmVzytvT+H3kilYvH09mLWrQdwFSsFEsxFVs5fK7A0g8gMZjbif4ACpKbjv7gNGaD8bUrlk8x+KRflttr22JEMRUbTUwwDQScyzPgedQHZT0xnx7ujw2jfVfExwYHwOsDTjLdJ2ebmeQIlJ7neo41s/DrsL3kl+W2lWvAga0tR3zueGr6GL78M3ifH0rGXrBC2aAR8uYcIA5gwV8zIE8onoh8u0Fca/ciF7j1uOzEnqcIm59sEXoGc0+z6+H45V1CvAvHcD7THztu669cnp+L0okAeIc6zjbM/24LgGM1gZk7jnRu1aQWoU9sfUOuhrmtaPIO3YY1KLLWZaEO5TKUbMY5zx8W9UJ6elpLwKXbsaZ4EFl7B4bMtDv0iRipKoDQT2sNQI9b1utXFdYisi+wzZ/ri/1m7QfDgEuvgUUEIJPq3DhX/5DWNqIXDOweC2wvIR90Oq3lDpdMIgD2r0dXvGdsEW5H6x6HLRJYU7C69VefO1x8Gde1ZFSJLfWS1jbCnhtOPxmpfv2LXOA2Xk2tvnwKKPFuZ/oRmwBwqRQDcKNeVQkYcOjtWVBuM/JuYw5b6isojIkYxyYAFn5K7ZBF10fea52y8QltAg6jnMqNHFBmGkQ1j+U43HMi2xMar1Nv0zGsf1s8nUsmUtPOOrbFIR8bHFDMB5zL13Gmr/kGlCkUzedTzzmzsaJXhYawnA3UmARpiYj5ooJZiUoxFRtK3X6pgNPv+IZVPcnwbOl6f+aBaO1CNvPW9n9LmCp01nuSaTRF2YxHqZ8DYQT6WsXT+RD6eUztwYLZ8rM+rcPxamv1VQzFUkzFXvkiVrySGQgJNvXHJAxiU3/NwiC03rSf05VBaPtu/Z7/B8Yn/w7eguloAAAAAElFTkSuQmCC');
   }
 
-  div.callout-note.callout-style-default .callout-caption {
+  div.callout-note.callout-style-default .callout-title {
     background-color: #dae6fb
   }
 
@@ -257,7 +259,7 @@
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEKklEQVRYCcVXTWhcVRS+575MJym48A+hSRFr00ySRQhURRfd2HYjk2SSTokuBCkU2o0LoSKKraKIBTcuFCoidGFD08nkBzdREbpQ1EDNIv8qSGMFUboImMSZd4/f9zJv8ibJMC8xJQfO3HPPPef7zrvvvnvviIkpC9nsw0UttFunbUhpFzFtarSd6WJkStVMw5xyVqYTvkwfzuf/5FgtkVoB0729j1rjXwThS7Vio+Mo6DNnvLfahoZ+i/o32lULuJ3NNiz7q6+pyAUkJaFF6JwaM2lUJlV0MlnQn5aTRbEu0SEqHUa0A4AdiGuB1kFXRfVyg5d87+Dg4DL6m2TLAub60ilj7A1Ec4odSAc8X95sHh7+ZRPCFo6Fnp7HfU/fBng/hi10CjCnWnJjsxvDNxWw0NfV6Rv5GgP3I3jGWXumdTD/3cbEOP2ZbOZp69yniG3FQ9z1jD7bnBu9Fc2tKGC2q+uAJOQHBDRiZX1x36o7fWBs7J9ownbtO+n0/qWkvW7UPIfc37WgT6ZGR++EOJyeQDSb9UB+DZ1G6DdLDzyS+b/kBCYGsYgJbSQHuThGKRcw5xdeQf8YdNHsc6ePXrlSYMBuSIAFTGAtQo+VuALo4BX83N190NWZWbynBjhOHsmNfFWLeL6v+ynsA58zDvvAC8j5PkbOcXCMg2PZFk3q8MjI7WAG/Dp9AwP7jdGBOOQkAvlFUB+irtm16I1Zw9YBcpGTGXYmk3kQIC/Cds55l+iMI3jqhjAuaoe+am2Jw5GT3Nbz3CkE12NavmzN5+erJW7046n/CH1RO/RVa8lBLozXk9uqykkGAyRXLWlLv5jyp4RFsG5vGVzpDLnIjTWgnRy2Rr+tDKvRc7Y8AyZq10jj8DqXdnIRNtFZb+t/ZRtXcDiVnzpqx8mPcDWxgARUqx0W1QB9MeUZiNrV4qP+Ehc+BpNgATsTX8ozYKL2NtFYAHc84fG7ndxUPr+AR/iQSns7uSUufAymwDOb2+NjK27lEFocm/EE2WpyIy/Hi66MWuMKJn8RvxIcj87IM5Vh9663ziW36kR0HNenXuxmfaD8JC7tfKbrhFr7LiZCrMjrzTeGx+PmkosrkNzW94ObzwocJ7A1HokLolY+AvkTiD/q1H0cN48c5EL8Crkttsa/AXQVDmutfyku0E7jShx49XqV3MFK8IryDhYVbj7Sj2P2eBxwcXoe8T8idsKKPRcnZw1b+slFTubwUwhktrfnAt7J++jwQtLZcm3sr9LQrjRzz6cfMv9aLvgmnAGvpoaGLxM4mAEaLV7iAzQ3oU0IvD5x9ix3yF2RAAuYAOO2f7PEFWCXZ4C9Pb2UsgDeVnFSpbFK7/IWu7TPTvBqzbGdCHOJQSxiEjt6IyZmxQyEJHv6xyQsYk//moVFsN2zP6fRImjfq7/n/wFDguUQFNEwugAAAABJRU5ErkJggg==');
   }
 
-  div.callout-important.callout-style-default .callout-caption {
+  div.callout-important.callout-style-default .callout-title {
     background-color: #f7dddc
   }
 
@@ -269,7 +271,7 @@
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAETklEQVRYCeVWW2gcVRg+58yaTUnizqbipZeX4uWhBEniBaoUX1Ioze52t7sRq6APio9V9MEaoWlVsFasRq0gltaAPuxms8lu0gcviE/FFOstVbSIxgcv6SU7EZqmdc7v9+9mJtNks51NTUH84ed889/PP+cmxP+d5FIbMJmNbpREu4WUkiTtCicKny0l1pIKmBzovF2S+hIJHX8iEu3hZJ5lNZGqyRrGSIQpq15AzF28jgpeY6yk6GVdrfFqdrD6Iw+QlB8g0YS2g7dyQmXM/IDhBhT0UCiRf59lfqmmDvzRt6kByV/m4JjtzuaujMUM2c5Z2d6JdKrRb3K2q6mA+oYVz8JnDdKPmmNthzkAk/lN63sYPgevrguc72aZX/L9C6x09GYyxBgCX4NlvyGUHOKELlm5rXeR1kchuChJt4SSwyddZRXgvwMGvYo4QSlk3/zkHD8UHxwVJA6zjZZqP8v8kK8OWLnIZtLyCAJagYC4rTGW/9Pqj92N/c+LUaAj27movwbi19tk/whRCIE7Q9vyI6yvRpftAKVTdUjOW40X3h5OXsKCdmFcx0xlLJoSuQngnrJe7Kcjm4OMq9FlC7CMmScQANuNvjfP3PjGXDBaUQmbp296S5L4DrpbrHN1T87ZVEZVCzg1FF0Ft+dKrlLukI+/c9ENo+TvlTDbYFvuKPtQ9+l052rXrgKoWkDAFnvh0wTOmYn8R5f4k/jN/fZiCM1tQx9jQQ4ANhqG4hiL0qIFTGViG9DKB7GYzgubnpofgYRwO+DFjh0Zin2m4b/97EDkXkc+f6xYAPX0KK2I/7fUQuwzuwo/L3AkcjugPNixC8cHf0FyPjWlItmLxWw4Ou9YsQCr5fijMGoD/zpdRy95HRysyXA74MWOnscpO4j2y3HAVisw85hX5+AFBRSHt4ShfLFkIMXTqyKFc46xdzQM6XbAi702a7sy04J0+feReMFKp5q9esYLCqAZYw/k14E/xcLLsFElaornTuJB0svMuJINy8xkIYuL+xPAlWRceH6+HX7THJ0djLUom46zREu7tTkxwmf/FdOZ/sh6Q8qvEAiHpm4PJ4a/doJe0gH1t+aHRgCzOvBvJedEK5OFE5jpm4AGP2a8Dxe3gGJ/pAutug9Gp6he92CsSsWBaEcxGx0FHytmIpuqGkOpldqNYQK8cSoXvd+xLxXADw0kf6UkJNFtdo5MOgaLjiQOQHcn+A6h5NuL2s0qsC2LOM75PcF3yr5STuBSAcGG+meA14K/CI21HcS4LBT6tv0QAh8Dr5l93AhZzG5ZJ4VxAqdZUEl9z7WJ4aN+svMvwHHL21UKTd1mqvChH7/Za5xzXBBKrUcB0TQ+Ulgkfbi/H/YT5EptrGzsEK7tR1B7ln9BBwckYfMiuSqklSznIuoIIOM42MQO+QnduCoFCI0bpkzjCjddHPN/F+2Yu+sd9bKNpVwHhbS3LluK/0zgfwD0xYI5dXuzlQAAAABJRU5ErkJggg==');
   }
 
-  div.callout-warning.callout-style-default .callout-caption {
+  div.callout-warning.callout-style-default .callout-title {
     background-color: #fcefdc
   }
 
@@ -281,7 +283,7 @@
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAADr0lEQVRYCe1XTWgTQRj9ZjZV8a9SPIkKgj8I1bMHsUWrqYLVg4Ue6v9BwZOxSYsIerFao7UiUryIqJcqgtpimhbBXoSCVxUFe9CTiogUrUp2Pt+3aUI2u5vdNh4dmMzOzHvvezuz8xNFM0mjnbXaNu1MvFWRXkXEyE6aYOYJpdW4IXuA4r0fo8qqSMDBU0v1HJUgVieAXxzCsdE/YJTdFcVIZQNMyhruOMJKXYFoLfIfIvVIMWdsrd+Rpd86ZmyzzjJmLStqRn0v8lzkb4rVIXvnpScOJuAn2ACC65FkPzEdEy4TPWRLJ2h7z4cArXzzaOdKlbOvKKX25Wl00jSnrwVxAg3o4dRxhO13RBSdNvH0xSARv3adTXbBdTf64IWO2vH0LT+cv4GR1DJt+DUItaQogeBX/chhbTBxEiZ6gftlDNXTrvT7co4ub5A6gp9HIcHvzTa46OS5fBeP87Qm0fQkr4FsYgVQ7Qg+ZayaDg9jhg1GkWj8RG6lkeSacrrHgDaxdoBiZPg+NXV/KifMuB6//JmYH4CntVEHy/keA6x4h4CU5oFy8GzrBS18cLJMXcljAKB6INjWsRcuZBWVaS3GDrqB7rdapVIeA+isQ57Eev9eCqzqOa81CY05VLd6SamW2wA2H3SiTbnbSxmzfp7WtKZkqy4mdyAlGx7ennghYf8voqp9cLSgKdqNfa6RdRsAAkPwRuJZNbpByn+RrJi1RXTwdi8RQF6ymDwGMAtZ6TVE+4uoKh+MYkcLsT0Hk8eAienbiGdjJHZTpmNjlbFJNKDVAp2fJlYju6IreQxQ08UJDNYdoLSl6AadO+fFuCQqVMB1NJwPm69T04Wv5WhfcWyfXQB+wXRs1pt+nCknRa0LVzSA/2B+a9+zQJadb7IyyV24YAxKp2Jqs3emZTuNnKxsah+uabKbMk7CbTgJx/zIgQYErIeTKRQ9yD9wxVof5YolPHqaWo7TD6tJlh7jQnK5z2n3+fGdggIOx2kaa2YI9QWarc5Ce1ipNWMKeSG4DysFF52KBmTNMmn5HqCFkwy34rDg05gDwgH3bBi+sgFhN/e8QvRn8kbamCOhgrZ9GJhFDgfcMHzFb6BAtjKpFhzTjwv1KCVuxHvCbsSiEz4CANnj84cwHdFXAbAOJ4LTSAawGWFn5tDhLMYz6nWeU2wJfIhmIJBefcd/A5FWQWGgrWzyORZ3Q6HuV+Jf0Bj+BTX69fm1zWgK7By1YTXchFDORywnfQ7GpzOo6S+qECrsx2ifVQAAAABJRU5ErkJggg==');
   }
 
-  div.callout-tip.callout-style-default .callout-caption {
+  div.callout-tip.callout-style-default .callout-title {
     background-color: #ccf1e3
   }
 
@@ -293,7 +295,7 @@
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAACV0lEQVRYCdVWzWoUQRCuqp2ICBLJXgITZL1EfQDBW/bkzUMUD7klD+ATSHBEfAIfQO+iXsWDxJsHL96EHAwhgzlkg8nBg25XWb0zIb0zs9muYYWkoKeru+vn664fBqElyZNuyh167NXJ8Ut8McjbmEraKHkd7uAnAFku+VWdb3reSmRV8PKSLfZ0Gjn3a6Xlcq9YGb6tADjn+lUfTXtVmaZ1KwBIvFI11rRXlWlatwIAAv2asaa9mlB9wwygiDX26qaw1yYPzFXg2N1GgG0FMF8Oj+VIx7E/03lHx8UhvYyNZLN7BwSPgekXXLribw7w5/c8EF+DBK5idvDVYtEEwMeYefjjLAdEyQ3M9nfOkgnPTEkYU+sxMq0BxNR6jExrAI31H1rzvLEfRIdgcv1XEdj6QTQAS2wtstEALLG1yEZ3QhH6oDX7ExBSFEkFINXH98NTrme5IOaaA7kIfiu2L8A3qhH9zRbukdCqdsA98TdElyeMe5BI8Rs2xHRIsoTSSVFfCFCWGPn9XHb4cdobRIWABNf0add9jakDjQJpJ1bTXOJXnnRXHRf+dNL1ZV1MBRCXhMbaHqGI1JkKIL7+i8uffuP6wVQAzO7+qVEbF6NbS0LJureYcWXUUhH66nLR5rYmva+2tjRFtojkM2aD76HEGAD3tPtKM309FJg5j/K682ywcWJ3PASCcycH/22u+Bh7Aa0ehM2Fu4z0SAE81HF9RkB21c5bEn4Dzw+/qNOyXr3DCTQDMBOdhi4nAgiFDGCinIa2owCEChUwD8qzd03PG+qdW/4fDzjUMcE1ZpIAAAAASUVORK5CYII=');
   }
 
-  div.callout-caution.callout-style-default .callout-caption {
+  div.callout-caution.callout-style-default .callout-title {
     background-color: #ffe5d0
   }
 
@@ -393,22 +395,25 @@
   <div class="reveal">
     <div class="slides">
 
-<section id="title-slide" class="center">
+<section id="title-slide" class="quarto-title-block center">
   <h1 class="title">Métodos de emparejamiento (Matching)</h1>
   <p class="subtitle">En grandes bases de datos</p>
-  <p class="author">Jordi Real <br> jreal@idiapjgol.info</p>
-  <p class="institute">IDIAP- Jordi Gol <br> USR-BCN. Grup DAP-Cat</p>
-</section>
 
-<section class="slide level2">
-
-<div class="cell">
-
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Jordi Real <br> jordireal@gmail.com 
 </div>
+        <p class="quarto-title-affiliation">
+            Digital Health Validation Center <br> Hospital Sant Pau
+          </p>
+    </div>
+</div>
+
 </section>
 <section id="métodos-de-matching" class="slide level2">
 <h2>Métodos de Matching</h2>
-<p><strong>Jordi Real - 2022</strong></p>
+<p><strong>Jordi Real - 2024</strong></p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img data-src="figures/Tesis_caratula.png" style="width:100.0%;height:100.0%"></p>
@@ -493,9 +498,6 @@
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
-<div class="cell" data-layout-align="center">
-
-</div>
 </section>
 <section id="introducción-1" class="slide level2">
 <h2>Introducción</h2>
@@ -549,9 +551,6 @@
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
-<div class="cell">
-
-</div>
 </section>
 <section id="introducción-3" class="slide level2">
 <h2>Introducción</h2>
@@ -560,9 +559,6 @@
 <figure>
 <p><img data-src="figures/Article_cuidador.png" style="width:75.0%;height:75.0%"></p>
 </figure>
-</div>
-<div class="cell" data-layout-align="center">
-
 </div>
 <aside class="notes">
 <ul>
@@ -684,7 +680,7 @@
 <div id="fig-boxplot" class="quarto-figure quarto-figure-center">
 <figure>
 <p><img data-src="figures/box_plot.png" data-ref-parent="fig-elephants"></p>
-<p></p><figcaption>(a) Boxplot</figcaption><p></p>
+<figcaption>(a) Boxplot</figcaption>
 </figure>
 </div>
 </div>
@@ -692,7 +688,7 @@
 <div id="fig-grafo" class="quarto-figure quarto-figure-center">
 <figure>
 <p><img data-src="figures/grafo1.png" data-ref-parent="fig-elephants"></p>
-<p></p><figcaption>(b) Grafo</figcaption><p></p>
+<figcaption>(b) Grafo</figcaption>
 </figure>
 </div>
 </div>
@@ -910,7 +906,7 @@
 <div class="quarto-figure quarto-figure-left">
 <figure>
 <p><img data-src="figures/Relacion_XY.png"></p>
-<p></p><figcaption>OR: 2.03; IC95%=(1,71-2,5)</figcaption><p></p>
+<figcaption>OR: 2.03; IC95%=(1,71-2,5)</figcaption>
 </figure>
 </div>
 </div>
@@ -918,7 +914,7 @@
 <div class="quarto-figure quarto-figure-left">
 <figure>
 <p><img data-src="figures/grafo3.png"></p>
-<p></p><figcaption>OR: 1.56; IC95%=(1.21-2.04)</figcaption><p></p>
+<figcaption>OR: 1.56; IC95%=(1.21-2.04)</figcaption>
 </figure>
 </div>
 </div>
@@ -980,7 +976,7 @@
 <div class="quarto-figure quarto-figure-left">
 <figure>
 <p><img data-src="figures/grafo2.png"></p>
-<p></p><figcaption>OR: 1.34; IC95%=(1,02-1,76)</figcaption><p></p>
+<figcaption>OR: 1.34; IC95%=(1,02-1,76)</figcaption>
 </figure>
 </div>
 </div>
@@ -988,7 +984,7 @@
 <div class="quarto-figure quarto-figure-left">
 <figure>
 <p><img data-src="figures/grafo3.png"></p>
-<p></p><figcaption>OR: 1.56; IC95%=(1.21-2.04)</figcaption><p></p>
+<figcaption>OR: 1.56; IC95%=(1.21-2.04)</figcaption>
 </figure>
 </div>
 </div>
@@ -1057,9 +1053,6 @@
 <p>Estudio de simulación</p>
 
 <img src="figures/grafo1.png" alt="drawing" style="float: right;" class="r-stretch"><p>Distintas aproximaciones para estimar el efecto de X sobre Y</p>
-<div class="cell">
-
-</div>
 <table>
 <thead>
 <tr class="header">
@@ -1286,9 +1279,6 @@
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
-<div class="cell">
-
-</div>
 </section>
 <section id="validación" class="slide level2">
 <h2>Validación</h2>
@@ -1320,7 +1310,7 @@
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img data-src="figures/Covariate_plot_cuidadors.png" class="fragment" style="width:65.0%;height:65.0%"></p>
-<p></p><figcaption>Covariate plot</figcaption><p></p>
+<figcaption>Covariate plot</figcaption>
 </figure>
 </div>
 <aside class="notes">
@@ -1351,7 +1341,7 @@
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img data-src="figures/Covariate_plot_CVDReal.png" class="fragment" style="width:100.0%;height:100.0%"></p>
-<p></p><figcaption>Covariate plot</figcaption><p></p>
+<figcaption>Covariate plot</figcaption>
 </figure>
 </div>
 </section>
@@ -1409,9 +1399,6 @@
 <div style="font-size: 0.7em">
 <p>matchit(formula, data = NULL, method = “nearest”, distance = “glm”, link = “logit”, distance.options = list(), estimand = “ATT”, exact = NULL, mahvars = NULL, antiexact = NULL, discard = “none”, reestimate = FALSE, s.weights = NULL, replace = FALSE, m.order = NULL, caliper = NULL, std.caliper = TRUE, ratio = 1, verbose = FALSE, …)</p>
 </div>
-<div class="cell">
-
-</div>
 <aside class="notes">
 <p>caliper: for methods that allow it, the width(s) of the caliper(s) to use in matching. Should be a numeric vector with each value named according to the variable to which the caliper applies. To apply to the distance measure, the value should be unnamed. See the individual methods pages for information on whether and how this argument is used. The default is NULL for no caliper.</p>
 <style type="text/css">
@@ -1431,74 +1418,74 @@
 <p>Ejemplo</p>
 <div class="cell">
 <div class="cell-output-display">
-
-<table class="table table-striped table-condensed lightable-classic-2 table" style="width: auto !important; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto; font-size: 22px; margin-left: auto; margin-right: auto;">
-<caption style="font-size: initial !important;">Summary descriptives table by groups of `treat'</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:center;"> 0 </th>
-   <th style="text-align:center;"> 1 </th>
-  </tr>
- </thead>
+<table class="table table-striped table-condensed lightable-classic-2 table" data-quarto-postprocess="true" style="width: auto !important; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto; font-size: 22px; margin-left: auto; margin-right: auto;">
+<caption>Summary descriptives table by groups of `treat'</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">0</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">1</th>
+</tr>
+</thead>
 <tbody>
-  <tr>
-   <td style="text-align:left;font-style: italic;border-bottom: 1px solid grey">  </td>
-   <td style="text-align:center;font-style: italic;border-bottom: 1px solid grey"> N=429 </td>
-   <td style="text-align:center;font-style: italic;border-bottom: 1px solid grey"> N=185 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> age </td>
-   <td style="text-align:center;"> 28.0 (10.8) </td>
-   <td style="text-align:center;"> 25.8 (7.16) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> educ </td>
-   <td style="text-align:center;"> 10.2 (2.86) </td>
-   <td style="text-align:center;"> 10.3 (2.01) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> race: </td>
-   <td style="text-align:center;">  </td>
-   <td style="text-align:center;">  </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;padding-left: 2em;" indentlevel="1"> black </td>
-   <td style="text-align:center;"> 87 (20.3%) </td>
-   <td style="text-align:center;"> 156 (84.3%) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;padding-left: 2em;" indentlevel="1"> hispan </td>
-   <td style="text-align:center;"> 61 (14.2%) </td>
-   <td style="text-align:center;"> 11 (5.95%) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;padding-left: 2em;" indentlevel="1"> white </td>
-   <td style="text-align:center;"> 281 (65.5%) </td>
-   <td style="text-align:center;"> 18 (9.73%) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> nodegree </td>
-   <td style="text-align:center;"> 0.60 (0.49) </td>
-   <td style="text-align:center;"> 0.71 (0.46) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> married </td>
-   <td style="text-align:center;"> 0.51 (0.50) </td>
-   <td style="text-align:center;"> 0.19 (0.39) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> re74 </td>
-   <td style="text-align:center;"> 5619 (6789) </td>
-   <td style="text-align:center;"> 2096 (4887) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> re75 </td>
-   <td style="text-align:center;"> 2466 (3292) </td>
-   <td style="text-align:center;"> 1532 (3219) </td>
-  </tr>
+<tr class="odd">
+<td style="text-align: left; font-style: italic; border-bottom: 1px solid grey;"></td>
+<td style="text-align: center; font-style: italic; border-bottom: 1px solid grey;">N=429</td>
+<td style="text-align: center; font-style: italic; border-bottom: 1px solid grey;">N=185</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">age</td>
+<td style="text-align: center;">28.0 (10.8)</td>
+<td style="text-align: center;">25.8 (7.16)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">educ</td>
+<td style="text-align: center;">10.2 (2.86)</td>
+<td style="text-align: center;">10.3 (2.01)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">race:</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">black</td>
+<td style="text-align: center;">87 (20.3%)</td>
+<td style="text-align: center;">156 (84.3%)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">hispan</td>
+<td style="text-align: center;">61 (14.2%)</td>
+<td style="text-align: center;">11 (5.95%)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">white</td>
+<td style="text-align: center;">281 (65.5%)</td>
+<td style="text-align: center;">18 (9.73%)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">nodegree</td>
+<td style="text-align: center;">0.60 (0.49)</td>
+<td style="text-align: center;">0.71 (0.46)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">married</td>
+<td style="text-align: center;">0.51 (0.50)</td>
+<td style="text-align: center;">0.19 (0.39)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">re74</td>
+<td style="text-align: center;">5619 (6789)</td>
+<td style="text-align: center;">2096 (4887)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">re75</td>
+<td style="text-align: center;">2466 (3292)</td>
+<td style="text-align: center;">1532 (3219)</td>
+</tr>
 </tbody>
 </table>
+
 
 </div>
 </div>
@@ -1523,86 +1510,86 @@
 <p><img src="figures/Prohibit_p_valor.jpg" alt="drawing" width="150" height="150" style="float: right;"></p>
 <div class="cell">
 <div class="cell-output-display">
-
-<table class="table table-striped table-condensed lightable-classic-2 table" style="width: auto !important; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto; font-size: 22px; margin-left: auto; margin-right: auto;">
-<caption style="font-size: initial !important;">Summary descriptives table by groups of `treat'</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:center;"> 0 </th>
-   <th style="text-align:center;"> 1 </th>
-   <th style="text-align:center;"> p.overall </th>
-  </tr>
- </thead>
+<table class="table table-striped table-condensed lightable-classic-2 table" data-quarto-postprocess="true" style="width: auto !important; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto; font-size: 22px; margin-left: auto; margin-right: auto;">
+<caption>Summary descriptives table by groups of `treat'</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">0</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">1</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">p.overall</th>
+</tr>
+</thead>
 <tbody>
-  <tr>
-   <td style="text-align:left;font-style: italic;border-bottom: 1px solid grey">  </td>
-   <td style="text-align:center;font-style: italic;border-bottom: 1px solid grey"> N=429 </td>
-   <td style="text-align:center;font-style: italic;border-bottom: 1px solid grey"> N=185 </td>
-   <td style="text-align:center;font-style: italic;border-bottom: 1px solid grey">  </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> age </td>
-   <td style="text-align:center;"> 28.0 (10.8) </td>
-   <td style="text-align:center;"> 25.8 (7.16) </td>
-   <td style="text-align:center;"> 0.003 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> educ </td>
-   <td style="text-align:center;"> 10.2 (2.86) </td>
-   <td style="text-align:center;"> 10.3 (2.01) </td>
-   <td style="text-align:center;"> 0.585 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> race: </td>
-   <td style="text-align:center;">  </td>
-   <td style="text-align:center;">  </td>
-   <td style="text-align:center;"> &lt;0.001 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;padding-left: 2em;" indentlevel="1"> black </td>
-   <td style="text-align:center;"> 87 (20.3%) </td>
-   <td style="text-align:center;"> 156 (84.3%) </td>
-   <td style="text-align:center;">  </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;padding-left: 2em;" indentlevel="1"> hispan </td>
-   <td style="text-align:center;"> 61 (14.2%) </td>
-   <td style="text-align:center;"> 11 (5.95%) </td>
-   <td style="text-align:center;">  </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;padding-left: 2em;" indentlevel="1"> white </td>
-   <td style="text-align:center;"> 281 (65.5%) </td>
-   <td style="text-align:center;"> 18 (9.73%) </td>
-   <td style="text-align:center;">  </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> nodegree </td>
-   <td style="text-align:center;"> 0.60 (0.49) </td>
-   <td style="text-align:center;"> 0.71 (0.46) </td>
-   <td style="text-align:center;"> 0.007 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> married </td>
-   <td style="text-align:center;"> 0.51 (0.50) </td>
-   <td style="text-align:center;"> 0.19 (0.39) </td>
-   <td style="text-align:center;"> &lt;0.001 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> re74 </td>
-   <td style="text-align:center;"> 5619 (6789) </td>
-   <td style="text-align:center;"> 2096 (4887) </td>
-   <td style="text-align:center;"> &lt;0.001 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> re75 </td>
-   <td style="text-align:center;"> 2466 (3292) </td>
-   <td style="text-align:center;"> 1532 (3219) </td>
-   <td style="text-align:center;"> 0.001 </td>
-  </tr>
+<tr class="odd">
+<td style="text-align: left; font-style: italic; border-bottom: 1px solid grey;"></td>
+<td style="text-align: center; font-style: italic; border-bottom: 1px solid grey;">N=429</td>
+<td style="text-align: center; font-style: italic; border-bottom: 1px solid grey;">N=185</td>
+<td style="text-align: center; font-style: italic; border-bottom: 1px solid grey;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">age</td>
+<td style="text-align: center;">28.0 (10.8)</td>
+<td style="text-align: center;">25.8 (7.16)</td>
+<td style="text-align: center;">0.003</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">educ</td>
+<td style="text-align: center;">10.2 (2.86)</td>
+<td style="text-align: center;">10.3 (2.01)</td>
+<td style="text-align: center;">0.585</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">race:</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">black</td>
+<td style="text-align: center;">87 (20.3%)</td>
+<td style="text-align: center;">156 (84.3%)</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">hispan</td>
+<td style="text-align: center;">61 (14.2%)</td>
+<td style="text-align: center;">11 (5.95%)</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">white</td>
+<td style="text-align: center;">281 (65.5%)</td>
+<td style="text-align: center;">18 (9.73%)</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">nodegree</td>
+<td style="text-align: center;">0.60 (0.49)</td>
+<td style="text-align: center;">0.71 (0.46)</td>
+<td style="text-align: center;">0.007</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">married</td>
+<td style="text-align: center;">0.51 (0.50)</td>
+<td style="text-align: center;">0.19 (0.39)</td>
+<td style="text-align: center;">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">re74</td>
+<td style="text-align: center;">5619 (6789)</td>
+<td style="text-align: center;">2096 (4887)</td>
+<td style="text-align: center;">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">re75</td>
+<td style="text-align: center;">2466 (3292)</td>
+<td style="text-align: center;">1532 (3219)</td>
+<td style="text-align: center;">0.001</td>
+</tr>
 </tbody>
 </table>
+
 
 </div>
 </div>
@@ -1660,74 +1647,74 @@ Discarded          57       8</code></pre>
 <p><strong>Validación</strong></p>
 <div class="cell">
 <div class="cell-output-display">
-
-<table class="table table-striped table-condensed lightable-classic-2 table" style="width: auto !important; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto; font-size: 22px; margin-left: auto; margin-right: auto;">
-<caption style="font-size: initial !important;">Summary descriptives table by groups of `treat'</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:center;"> 0 </th>
-   <th style="text-align:center;"> 1 </th>
-  </tr>
- </thead>
+<table class="table table-striped table-condensed lightable-classic-2 table" data-quarto-postprocess="true" style="width: auto !important; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto; font-size: 22px; margin-left: auto; margin-right: auto;">
+<caption>Summary descriptives table by groups of `treat'</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">0</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">1</th>
+</tr>
+</thead>
 <tbody>
-  <tr>
-   <td style="text-align:left;font-style: italic;border-bottom: 1px solid grey">  </td>
-   <td style="text-align:center;font-style: italic;border-bottom: 1px solid grey"> N=106 </td>
-   <td style="text-align:center;font-style: italic;border-bottom: 1px solid grey"> N=106 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> age </td>
-   <td style="text-align:center;"> 25.3 (10.2) </td>
-   <td style="text-align:center;"> 26.1 (6.87) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> educ </td>
-   <td style="text-align:center;"> 10.4 (2.78) </td>
-   <td style="text-align:center;"> 10.4 (2.06) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> race: </td>
-   <td style="text-align:center;">  </td>
-   <td style="text-align:center;">  </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;padding-left: 2em;" indentlevel="1"> black </td>
-   <td style="text-align:center;"> 77 (72.6%) </td>
-   <td style="text-align:center;"> 77 (72.6%) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;padding-left: 2em;" indentlevel="1"> hispan </td>
-   <td style="text-align:center;"> 11 (10.4%) </td>
-   <td style="text-align:center;"> 11 (10.4%) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;padding-left: 2em;" indentlevel="1"> white </td>
-   <td style="text-align:center;"> 18 (17.0%) </td>
-   <td style="text-align:center;"> 18 (17.0%) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> nodegree </td>
-   <td style="text-align:center;"> 0.62 (0.49) </td>
-   <td style="text-align:center;"> 0.65 (0.48) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> married </td>
-   <td style="text-align:center;"> 0.20 (0.40) </td>
-   <td style="text-align:center;"> 0.20 (0.40) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> re74 </td>
-   <td style="text-align:center;"> 2578 (4476) </td>
-   <td style="text-align:center;"> 2139 (4137) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> re75 </td>
-   <td style="text-align:center;"> 1739 (2882) </td>
-   <td style="text-align:center;"> 1707 (3788) </td>
-  </tr>
+<tr class="odd">
+<td style="text-align: left; font-style: italic; border-bottom: 1px solid grey;"></td>
+<td style="text-align: center; font-style: italic; border-bottom: 1px solid grey;">N=106</td>
+<td style="text-align: center; font-style: italic; border-bottom: 1px solid grey;">N=106</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">age</td>
+<td style="text-align: center;">25.3 (10.2)</td>
+<td style="text-align: center;">26.1 (6.87)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">educ</td>
+<td style="text-align: center;">10.4 (2.78)</td>
+<td style="text-align: center;">10.4 (2.06)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">race:</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">black</td>
+<td style="text-align: center;">77 (72.6%)</td>
+<td style="text-align: center;">77 (72.6%)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">hispan</td>
+<td style="text-align: center;">11 (10.4%)</td>
+<td style="text-align: center;">11 (10.4%)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">white</td>
+<td style="text-align: center;">18 (17.0%)</td>
+<td style="text-align: center;">18 (17.0%)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">nodegree</td>
+<td style="text-align: center;">0.62 (0.49)</td>
+<td style="text-align: center;">0.65 (0.48)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">married</td>
+<td style="text-align: center;">0.20 (0.40)</td>
+<td style="text-align: center;">0.20 (0.40)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">re74</td>
+<td style="text-align: center;">2578 (4476)</td>
+<td style="text-align: center;">2139 (4137)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">re75</td>
+<td style="text-align: center;">1739 (2882)</td>
+<td style="text-align: center;">1707 (3788)</td>
+</tr>
 </tbody>
 </table>
+
 
 </div>
 </div>
@@ -1738,86 +1725,86 @@ Discarded          57       8</code></pre>
 <p><img src="figures/Prohibit_p_valor.jpg" alt="drawing" width="150" height="150" style="float: right;"></p>
 <div class="cell">
 <div class="cell-output-display">
-
-<table class="table table-striped table-condensed lightable-classic-2 table" style="width: auto !important; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto; font-size: 22px; margin-left: auto; margin-right: auto;">
-<caption style="font-size: initial !important;">Summary descriptives table by groups of `treat'</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:center;"> 0 </th>
-   <th style="text-align:center;"> 1 </th>
-   <th style="text-align:center;"> p.overall </th>
-  </tr>
- </thead>
+<table class="table table-striped table-condensed lightable-classic-2 table" data-quarto-postprocess="true" style="width: auto !important; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto; font-size: 22px; margin-left: auto; margin-right: auto;">
+<caption>Summary descriptives table by groups of `treat'</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">0</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">1</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">p.overall</th>
+</tr>
+</thead>
 <tbody>
-  <tr>
-   <td style="text-align:left;font-style: italic;border-bottom: 1px solid grey">  </td>
-   <td style="text-align:center;font-style: italic;border-bottom: 1px solid grey"> N=106 </td>
-   <td style="text-align:center;font-style: italic;border-bottom: 1px solid grey"> N=106 </td>
-   <td style="text-align:center;font-style: italic;border-bottom: 1px solid grey">  </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> age </td>
-   <td style="text-align:center;"> 25.3 (10.2) </td>
-   <td style="text-align:center;"> 26.1 (6.87) </td>
-   <td style="text-align:center;"> 0.509 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> educ </td>
-   <td style="text-align:center;"> 10.4 (2.78) </td>
-   <td style="text-align:center;"> 10.4 (2.06) </td>
-   <td style="text-align:center;"> 0.911 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> race: </td>
-   <td style="text-align:center;">  </td>
-   <td style="text-align:center;">  </td>
-   <td style="text-align:center;"> 1.000 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;padding-left: 2em;" indentlevel="1"> black </td>
-   <td style="text-align:center;"> 77 (72.6%) </td>
-   <td style="text-align:center;"> 77 (72.6%) </td>
-   <td style="text-align:center;">  </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;padding-left: 2em;" indentlevel="1"> hispan </td>
-   <td style="text-align:center;"> 11 (10.4%) </td>
-   <td style="text-align:center;"> 11 (10.4%) </td>
-   <td style="text-align:center;">  </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;padding-left: 2em;" indentlevel="1"> white </td>
-   <td style="text-align:center;"> 18 (17.0%) </td>
-   <td style="text-align:center;"> 18 (17.0%) </td>
-   <td style="text-align:center;">  </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> nodegree </td>
-   <td style="text-align:center;"> 0.62 (0.49) </td>
-   <td style="text-align:center;"> 0.65 (0.48) </td>
-   <td style="text-align:center;"> 0.670 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> married </td>
-   <td style="text-align:center;"> 0.20 (0.40) </td>
-   <td style="text-align:center;"> 0.20 (0.40) </td>
-   <td style="text-align:center;"> 1.000 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> re74 </td>
-   <td style="text-align:center;"> 2578 (4476) </td>
-   <td style="text-align:center;"> 2139 (4137) </td>
-   <td style="text-align:center;"> 0.459 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> re75 </td>
-   <td style="text-align:center;"> 1739 (2882) </td>
-   <td style="text-align:center;"> 1707 (3788) </td>
-   <td style="text-align:center;"> 0.945 </td>
-  </tr>
+<tr class="odd">
+<td style="text-align: left; font-style: italic; border-bottom: 1px solid grey;"></td>
+<td style="text-align: center; font-style: italic; border-bottom: 1px solid grey;">N=106</td>
+<td style="text-align: center; font-style: italic; border-bottom: 1px solid grey;">N=106</td>
+<td style="text-align: center; font-style: italic; border-bottom: 1px solid grey;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">age</td>
+<td style="text-align: center;">25.3 (10.2)</td>
+<td style="text-align: center;">26.1 (6.87)</td>
+<td style="text-align: center;">0.509</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">educ</td>
+<td style="text-align: center;">10.4 (2.78)</td>
+<td style="text-align: center;">10.4 (2.06)</td>
+<td style="text-align: center;">0.911</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">race:</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">1.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">black</td>
+<td style="text-align: center;">77 (72.6%)</td>
+<td style="text-align: center;">77 (72.6%)</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">hispan</td>
+<td style="text-align: center;">11 (10.4%)</td>
+<td style="text-align: center;">11 (10.4%)</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">white</td>
+<td style="text-align: center;">18 (17.0%)</td>
+<td style="text-align: center;">18 (17.0%)</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">nodegree</td>
+<td style="text-align: center;">0.62 (0.49)</td>
+<td style="text-align: center;">0.65 (0.48)</td>
+<td style="text-align: center;">0.670</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">married</td>
+<td style="text-align: center;">0.20 (0.40)</td>
+<td style="text-align: center;">0.20 (0.40)</td>
+<td style="text-align: center;">1.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">re74</td>
+<td style="text-align: center;">2578 (4476)</td>
+<td style="text-align: center;">2139 (4137)</td>
+<td style="text-align: center;">0.459</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">re75</td>
+<td style="text-align: center;">1739 (2882)</td>
+<td style="text-align: center;">1707 (3788)</td>
+<td style="text-align: center;">0.945</td>
+</tr>
 </tbody>
 </table>
+
 
 </div>
 </div>
@@ -1866,7 +1853,7 @@ Discarded          57       8</code></pre>
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img data-src="figures/Matching_density_incidence.PNG" style="width:55.0%;height:55.0%"></p>
-<p></p><figcaption>Esquema de selección de casos</figcaption><p></p>
+<figcaption>Esquema de selección de casos</figcaption>
 </figure>
 </div>
 <aside class="notes">
@@ -1896,109 +1883,105 @@ Discarded          57       8</code></pre>
 <p><a href="https://jrealgatius.github.io/TBC_ANALISIS/codi/shiny/DashBoard_TB.html#sampling-and-follow-up-sheeme">Estudio DM_TBC</a></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu">library</span>(Macedonia)</span>
-<span id="cb10-2"><a href="#cb10-2"></a>dat2<span class="ot">&lt;-</span>Macedonia<span class="sc">::</span><span class="fu">match_density_incidence</span>(<span class="at">dt=</span>Macedonia<span class="sc">::</span>dat,</span>
-<span id="cb10-3"><a href="#cb10-3"></a>                          <span class="at">id=</span><span class="st">"idp"</span>,</span>
-<span id="cb10-4"><a href="#cb10-4"></a>                          <span class="at">llistaPS=</span><span class="fu">c</span>(<span class="st">"sex"</span>),</span>
-<span id="cb10-5"><a href="#cb10-5"></a>                          <span class="at">eventcontrol=</span><span class="cn">TRUE</span>,</span>
-<span id="cb10-6"><a href="#cb10-6"></a>                          <span class="at">reemplacement=</span><span class="cn">FALSE</span>,</span>
-<span id="cb10-7"><a href="#cb10-7"></a>                          <span class="at">numcores=</span><span class="cn">NA</span>,</span>
-<span id="cb10-8"><a href="#cb10-8"></a>                          <span class="at">Ncontrols=</span><span class="dv">1</span>,</span>
-<span id="cb10-9"><a href="#cb10-9"></a>                          <span class="at">seed=</span><span class="dv">123</span>)</span>
-<span id="cb10-10"><a href="#cb10-10"></a>dat<span class="sc">$</span>idp <span class="sc">%&gt;%</span> <span class="fu">length</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 55</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>dat2<span class="sc">$</span>idp <span class="sc">%&gt;%</span> <span class="fu">length</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 18</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>dat2 <span class="sc">%&gt;%</span> <span class="fu">head</span>() <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(diabetes,heartdis,byear)) <span class="sc">%&gt;%</span> kableExtra<span class="sc">::</span><span class="fu">kable</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb14-2"><a href="#cb14-2"></a>  kableExtra<span class="sc">::</span><span class="fu">kable_classic_2</span>() <span class="sc">%&gt;%</span> kableExtra<span class="sc">::</span><span class="fu">kable_styling</span>(<span class="at">font_size =</span> <span class="dv">15</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-2"><a href="#cb10-2"></a></span>
+<span id="cb10-3"><a href="#cb10-3"></a></span>
+<span id="cb10-4"><a href="#cb10-4"></a>dat2<span class="ot">&lt;-</span>Macedonia<span class="sc">::</span><span class="fu">match_density_incidence</span>(<span class="at">dt=</span>Macedonia<span class="sc">::</span>dat_test,</span>
+<span id="cb10-5"><a href="#cb10-5"></a>                          <span class="at">id=</span><span class="st">"idp"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6"></a>                          <span class="at">llistaPS=</span><span class="fu">c</span>(<span class="st">"sex"</span>),</span>
+<span id="cb10-7"><a href="#cb10-7"></a>                          <span class="at">eventcontrol=</span><span class="cn">TRUE</span>,</span>
+<span id="cb10-8"><a href="#cb10-8"></a>                          <span class="at">reemplacement=</span><span class="cn">FALSE</span>,</span>
+<span id="cb10-9"><a href="#cb10-9"></a>                          <span class="at">numcores=</span><span class="cn">NA</span>,</span>
+<span id="cb10-10"><a href="#cb10-10"></a>                          <span class="at">Ncontrols=</span><span class="dv">1</span>,</span>
+<span id="cb10-11"><a href="#cb10-11"></a>                          <span class="at">seed=</span><span class="dv">123</span>)</span>
+<span id="cb10-12"><a href="#cb10-12"></a><span class="co"># dat$idp %&gt;% length()</span></span>
+<span id="cb10-13"><a href="#cb10-13"></a><span class="co"># dat2$idp %&gt;% length()</span></span>
+<span id="cb10-14"><a href="#cb10-14"></a>dat2 <span class="sc">%&gt;%</span> <span class="fu">head</span>() <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(diabetes,heartdis,byear)) <span class="sc">%&gt;%</span> kableExtra<span class="sc">::</span><span class="fu">kable</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb10-15"><a href="#cb10-15"></a>  kableExtra<span class="sc">::</span><span class="fu">kable_classic_2</span>() <span class="sc">%&gt;%</span> kableExtra<span class="sc">::</span><span class="fu">kable_styling</span>(<span class="at">font_size =</span> <span class="dv">15</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
-<table class=" lightable-classic-2 table" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto; font-size: 15px; margin-left: auto; margin-right: auto;">
- <thead>
-  <tr>
-   <th style="text-align:left;"> idp </th>
-   <th style="text-align:right;"> .caseid </th>
-   <th style="text-align:right;"> .dtindex </th>
-   <th style="text-align:right;"> .event </th>
-   <th style="text-align:right;"> .n </th>
-   <th style="text-align:right;"> event </th>
-   <th style="text-align:left;"> sex </th>
-   <th style="text-align:right;"> dtindex_case </th>
-   <th style="text-align:right;"> dtindex_control </th>
-  </tr>
- </thead>
+<table class="lightable-classic-2 table" data-quarto-postprocess="true" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto; font-size: 15px; margin-left: auto; margin-right: auto;">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">idp</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.caseid</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.dtindex</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.event</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.n</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">event</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">dtindex_case</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">dtindex_control</th>
+</tr>
+</thead>
 <tbody>
-  <tr>
-   <td style="text-align:left;"> P41 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 5 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:left;"> fem </td>
-   <td style="text-align:right;"> 5 </td>
-   <td style="text-align:right;"> NA </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> P20 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 5 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:left;"> fem </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> 20 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> P42 </td>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:right;"> 8 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:left;"> fem </td>
-   <td style="text-align:right;"> 8 </td>
-   <td style="text-align:right;"> NA </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> P13 </td>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:right;"> 8 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:left;"> fem </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> 13 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> P43 </td>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 11 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:left;"> fem </td>
-   <td style="text-align:right;"> 11 </td>
-   <td style="text-align:right;"> NA </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> P19 </td>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 11 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:left;"> fem </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> 19 </td>
-  </tr>
+<tr class="odd">
+<td style="text-align: left;">P41</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">fem</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">P20</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">fem</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">P42</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">fem</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">P13</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">fem</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">P43</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">fem</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">P19</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">fem</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">19</td>
+</tr>
 </tbody>
 </table>
+
 
 </div>
 </div>
@@ -2027,103 +2010,103 @@ Discarded          57       8</code></pre>
 <h2>Muestreo por densidad de incidencia</h2>
 <p><strong>Ejemplo: Caso-Control</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>dades<span class="ot">&lt;-</span><span class="fu">readRDS</span>(<span class="st">"dades_setMatch.Rds"</span>)</span>
-<span id="cb15-2"><a href="#cb15-2"></a><span class="co"># data de censura en els casos com a molt la data de CAS </span></span>
-<span id="cb15-3"><a href="#cb15-3"></a>dades<span class="ot">&lt;-</span>dades <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">dtindex_control=</span><span class="fu">ifelse</span>(event<span class="sc">==</span><span class="dv">1</span>,dtindex_case,dtindex_control))</span>
-<span id="cb15-4"><a href="#cb15-4"></a>llistaPS<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">"sexe"</span>,<span class="st">"year_DM2"</span>,<span class="st">"year_naix"</span>)</span>
-<span id="cb15-5"><a href="#cb15-5"></a></span>
-<span id="cb15-6"><a href="#cb15-6"></a>dt_aparellada<span class="ot">&lt;-</span><span class="fu">match_density_incidence</span>(dades,</span>
-<span id="cb15-7"><a href="#cb15-7"></a>                                       <span class="at">id=</span><span class="st">"id"</span>,</span>
-<span id="cb15-8"><a href="#cb15-8"></a>                                       <span class="at">llistaPS=</span>llistaPS,</span>
-<span id="cb15-9"><a href="#cb15-9"></a>                                       <span class="at">eventcontrol =</span> T,</span>
-<span id="cb15-10"><a href="#cb15-10"></a>                                       <span class="at">reemplacement=</span>F,</span>
-<span id="cb15-11"><a href="#cb15-11"></a>                                       <span class="at">Ncontrols =</span> <span class="dv">10</span>,</span>
-<span id="cb15-12"><a href="#cb15-12"></a>                                       <span class="at">seed=</span><span class="dv">131</span>)</span>
-<span id="cb15-13"><a href="#cb15-13"></a>dades <span class="sc">%&gt;%</span> <span class="fu">n_distinct</span>(<span class="st">"id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>dades<span class="ot">&lt;-</span><span class="fu">readRDS</span>(<span class="st">"dades_setMatch.Rds"</span>)</span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="co"># data de censura en els casos com a molt la data de CAS </span></span>
+<span id="cb11-3"><a href="#cb11-3"></a>dades<span class="ot">&lt;-</span>dades <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">dtindex_control=</span><span class="fu">ifelse</span>(event<span class="sc">==</span><span class="dv">1</span>,dtindex_case,dtindex_control))</span>
+<span id="cb11-4"><a href="#cb11-4"></a>llistaPS<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">"sexe"</span>,<span class="st">"year_DM2"</span>,<span class="st">"year_naix"</span>)</span>
+<span id="cb11-5"><a href="#cb11-5"></a></span>
+<span id="cb11-6"><a href="#cb11-6"></a>dt_aparellada<span class="ot">&lt;-</span><span class="fu">match_density_incidence</span>(dades,</span>
+<span id="cb11-7"><a href="#cb11-7"></a>                                       <span class="at">id=</span><span class="st">"id"</span>,</span>
+<span id="cb11-8"><a href="#cb11-8"></a>                                       <span class="at">llistaPS=</span>llistaPS,</span>
+<span id="cb11-9"><a href="#cb11-9"></a>                                       <span class="at">eventcontrol =</span> T,</span>
+<span id="cb11-10"><a href="#cb11-10"></a>                                       <span class="at">reemplacement=</span>F,</span>
+<span id="cb11-11"><a href="#cb11-11"></a>                                       <span class="at">Ncontrols =</span> <span class="dv">10</span>,</span>
+<span id="cb11-12"><a href="#cb11-12"></a>                                       <span class="at">seed=</span><span class="dv">131</span>)</span>
+<span id="cb11-13"><a href="#cb11-13"></a>dades <span class="sc">%&gt;%</span> <span class="fu">n_distinct</span>(<span class="st">"id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 400</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>dt_aparellada <span class="sc">%&gt;%</span> <span class="fu">n_distinct</span>(<span class="st">"id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>dt_aparellada <span class="sc">%&gt;%</span> <span class="fu">n_distinct</span>(<span class="st">"id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 30</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>dt_aparellada <span class="sc">%&gt;%</span> <span class="fu">select</span>(id,.caseid,.dtindex,.event,.n,<span class="at">Fecha_caso=</span>dat_cas,llistaPS) <span class="sc">%&gt;%</span> </span>
-<span id="cb19-2"><a href="#cb19-2"></a>  <span class="fu">mutate</span>(<span class="at">.dtindex=</span>lubridate<span class="sc">::</span><span class="fu">as_date</span>(.dtindex)) <span class="sc">%&gt;%</span> </span>
-<span id="cb19-3"><a href="#cb19-3"></a>  <span class="fu">head</span>(<span class="dv">5</span>) <span class="sc">%&gt;%</span> kableExtra<span class="sc">::</span><span class="fu">kable</span>() <span class="sc">%&gt;%</span> kableExtra<span class="sc">::</span><span class="fu">kable_classic</span>() <span class="sc">%&gt;%</span> kableExtra<span class="sc">::</span><span class="fu">kable_styling</span>(<span class="at">font_size =</span> <span class="dv">15</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>dt_aparellada <span class="sc">%&gt;%</span> <span class="fu">select</span>(id,.caseid,.dtindex,.event,.n,<span class="at">Fecha_caso=</span>dat_cas,llistaPS) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-2"><a href="#cb15-2"></a>  <span class="fu">mutate</span>(<span class="at">.dtindex=</span>lubridate<span class="sc">::</span><span class="fu">as_date</span>(.dtindex)) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-3"><a href="#cb15-3"></a>  <span class="fu">head</span>(<span class="dv">5</span>) <span class="sc">%&gt;%</span> kableExtra<span class="sc">::</span><span class="fu">kable</span>() <span class="sc">%&gt;%</span> kableExtra<span class="sc">::</span><span class="fu">kable_classic</span>() <span class="sc">%&gt;%</span> kableExtra<span class="sc">::</span><span class="fu">kable_styling</span>(<span class="at">font_size =</span> <span class="dv">15</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
-<table class=" lightable-classic table" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto; font-size: 15px; margin-left: auto; margin-right: auto;">
- <thead>
-  <tr>
-   <th style="text-align:right;"> id </th>
-   <th style="text-align:right;"> .caseid </th>
-   <th style="text-align:left;"> .dtindex </th>
-   <th style="text-align:right;"> .event </th>
-   <th style="text-align:right;"> .n </th>
-   <th style="text-align:left;"> Fecha_caso </th>
-   <th style="text-align:left;"> sexe </th>
-   <th style="text-align:right;"> year_DM2 </th>
-   <th style="text-align:right;"> year_naix </th>
-  </tr>
- </thead>
+<table class="lightable-classic table" data-quarto-postprocess="true" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto; font-size: 15px; margin-left: auto; margin-right: auto;">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">id</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.caseid</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">.dtindex</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.event</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">.n</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Fecha_caso</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">sexe</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">year_DM2</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">year_naix</th>
+</tr>
+</thead>
 <tbody>
-  <tr>
-   <td style="text-align:right;"> 299 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:left;"> 2012-09-13 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:left;"> 2012-09-13 </td>
-   <td style="text-align:left;"> D </td>
-   <td style="text-align:right;"> 2004 </td>
-   <td style="text-align:right;"> 1929 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 214 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:left;"> 2012-09-13 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:left;"> 2017-06-15 </td>
-   <td style="text-align:left;"> D </td>
-   <td style="text-align:right;"> 2004 </td>
-   <td style="text-align:right;"> 1929 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 35 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:left;"> 2012-09-13 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> D </td>
-   <td style="text-align:right;"> 2004 </td>
-   <td style="text-align:right;"> 1929 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 400 </td>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:left;"> 2013-04-11 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:left;"> 2013-04-11 </td>
-   <td style="text-align:left;"> D </td>
-   <td style="text-align:right;"> 2004 </td>
-   <td style="text-align:right;"> 1931 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 226 </td>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:left;"> 2013-04-11 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> D </td>
-   <td style="text-align:right;"> 2004 </td>
-   <td style="text-align:right;"> 1931 </td>
-  </tr>
+<tr class="odd">
+<td style="text-align: right;">299</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">2012-09-13</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">2012-09-13</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: right;">2004</td>
+<td style="text-align: right;">1929</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">214</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">2012-09-13</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">2017-06-15</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: right;">2004</td>
+<td style="text-align: right;">1929</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">35</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">2012-09-13</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: right;">2004</td>
+<td style="text-align: right;">1929</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">400</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">2013-04-11</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">2013-04-11</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: right;">2004</td>
+<td style="text-align: right;">1931</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">226</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">2013-04-11</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: right;">2004</td>
+<td style="text-align: right;">1931</td>
+</tr>
 </tbody>
 </table>
+
 
 </div>
 </div>
@@ -2378,7 +2361,7 @@ Discarded          57       8</code></pre>
 <section id="material-extra" class="slide level2">
 <h2>Material extra</h2>
 <p><img data-src="figures/captura_article_lesio_renal2.png"></p>
-<p><img src="logos/Logo_dapcat_idiap.png" class="slide-logo"></p>
+<p><img src="logos/Logo_dapcat_idiap_2.png" class="slide-logo"></p>
 <div class="footer footer-default">
 <p>Métodos de Matching en estudios retrospectivos</p>
 </div>
@@ -2416,7 +2399,7 @@ Discarded          57       8</code></pre>
 'autoAnimateEasing': "ease",
 'autoAnimateDuration': 1,
 'autoAnimateUnmatched': true,
-'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
 'chalkboard': {"buttons":true},
 'smaller': true,
  
@@ -2603,12 +2586,15 @@ Discarded          57       8</code></pre>
       // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
       // slide changes (different for each slide format).
       (function () {
-        function fireSlideChanged(previousSlide, currentSlide) {
-
-          // dispatch for htmlwidgets
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
           const event = window.document.createEvent("Event");
           event.initEvent("slideenter", true, true);
           window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
 
           // dispatch for shiny
           if (window.jQuery) {
@@ -2619,13 +2605,6 @@ Discarded          57       8</code></pre>
               window.jQuery(currentSlide).trigger("shown");
             }
           }
-        }
-
-        // hookup for reveal
-        if (window.Reveal) {
-          window.Reveal.addEventListener("slidechanged", function(event) {
-            fireSlideChanged(event.previousSlide, event.currentSlide);
-          });
         }
 
         // hookup for slidy
@@ -2663,9 +2642,23 @@ Discarded          57       8</code></pre>
       tabsets.forEach(function(tabset) {
         const tabby = new Tabby('#' + tabset.id);
       });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
       const clipboard = new window.ClipboardJS('.code-copy-button', {
-        target: function(trigger) {
-          return trigger.previousElementSibling;
+        text: function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
         }
       });
       clipboard.on('success', function(e) {
@@ -2677,7 +2670,24 @@ Discarded          57       8</code></pre>
         button.classList.add('code-copy-button-checked');
         var currentTitle = button.getAttribute("title");
         button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
         setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
           button.setAttribute("title", currentTitle);
           button.classList.remove('code-copy-button-checked');
         }, 1000);
@@ -2696,7 +2706,7 @@ Discarded          57       8</code></pre>
           },
           interactive: true,
           interactiveBorder: 10,
-          theme: 'quarto-reveal',
+          theme: 'light-border',
           placement: 'bottom-start'
         };
           config['offset'] = [0,0];
@@ -2715,24 +2725,42 @@ Discarded          57       8</code></pre>
           return note.innerHTML;
         });
       }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
       var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
       for (var i=0; i<bibliorefs.length; i++) {
         const ref = bibliorefs[i];
-        const cites = ref.parentNode.getAttribute('data-cites').split(' ');
-        tippyHover(ref, function() {
-          var popup = window.document.createElement('div');
-          cites.forEach(function(cite) {
-            var citeDiv = window.document.createElement('div');
-            citeDiv.classList.add('hanging-indent');
-            citeDiv.classList.add('csl-entry');
-            var biblioDiv = window.document.getElementById('ref-' + cite);
-            if (biblioDiv) {
-              citeDiv.innerHTML = biblioDiv.innerHTML;
-            }
-            popup.appendChild(citeDiv);
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
           });
-          return popup.innerHTML;
-        });
+        }
       }
     });
     </script>
