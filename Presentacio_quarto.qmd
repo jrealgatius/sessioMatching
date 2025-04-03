@@ -1,7 +1,7 @@
 ---
 title: "Métodos de emparejamiento (Matching)"
 subtitle: "En grandes bases de datos"
-author: "Jordi Real <br> jordireal@gmail.com"
+author: "Jordi Real <br> jrealg@santpau.cat"
 institute: "Digital Health Validation Center <br> Hospital Sant Pau"
 slide-number: true
 smaller: true
@@ -28,7 +28,7 @@ source("global_funcions.R")
 
 ## Métodos de Matching
 
-**Jordi Real - 2024**
+**Jordi Real - 2025**
 
 ![](figures/Tesis_caratula.png){width="100%" height="100%" fig-align="center"}
 
@@ -333,12 +333,14 @@ knitr::include_graphics("figures/grafo1.png")
     2.  Exageración o atenuació d'una asociación real (confusión positiva)
     3.  Inversión del sentido de una asociación real (confusión negativa)
 
+
 ## Métodos de ajuste
 
 ::: incremental
--   Restricción (Diseño)
 
 -   Anticipación de confusores potenciales (Diseño)
+
+-   Restricción (Diseño)
 
 -   Estratificación por confusor/es (Análisis):
 
@@ -563,10 +565,11 @@ Dada N, encontrar n (n<N), tal que los grupos sean de igual o de similares carac
 **Comparativa entre métodos**
 
 -   Medida de asociación **no ajustada**: OR= 2,03 (IC95%: 1,7 - 2,5)
--   Medida de asociación **ajustada según regressión**: OR= 1,56 (IC95%: 1,21 - 2,04)
+-   Medida de asociación **ajustada según regressión**: OR= 1,56 (IC95%: 1,21 - 2,04)[^3]
 -   Medida de asociación **según método de matching**: OR = 1,34 (IC95%: 1,02 - 1,76)
 
 ::: fragment
+
 ::: {layout-ncol="2"}
 
 ![OR: 1.34; IC95%=(1,02-1,76)](figures/grafo2.png){fig-align="left"}
@@ -577,7 +580,7 @@ Dada N, encontrar n (n<N), tal que los grupos sean de igual o de similares carac
 
 :::
 
-[^2]: Ajustado por: Edad, sexo, Población, Composición familiar, Nivel educativo, Ingresos familiarias, clase social
+[^3]: Ajustado por: Edad, sexo, Población, Composición familiar, Nivel educativo, Ingresos familiarias, clase social
 
 
 
@@ -958,6 +961,16 @@ Evaluación de la calidad del equilibrio de las covariables basales después del
 
 
 ![Covariate plot](figures/Covariate_plot_CVDReal.png){.fragment width="100%" height="100%"}
+
+## Validación
+
+Evaluación de la calidad del equilibrio de la distancia después del matching 
+
+**Distribución de la distancia pre y post**
+
+
+![Covariate plot](figures/density_PS_pre_post.png){.fragment width="100%" height="100%"}
+
 
 ## Como?
 
